@@ -8,8 +8,8 @@ and may not be redistributed without written permission.*/
 #include <string>
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 //Starts up SDL and creates window
 bool init();
@@ -92,7 +92,7 @@ bool loadMedia()
 	bool success = true;
 
 	//Load PNG texture
-	gTexture = loadTexture( "Images/Dynamically generated objects in Excel.jpg" );
+	gTexture = loadTexture( "Images/Dynamically generated objects in Excel.png" );
 	if( gTexture == NULL )
 	{
 		printf( "Failed to load texture image!\n" );
