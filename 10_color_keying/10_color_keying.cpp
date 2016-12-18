@@ -6,9 +6,6 @@ and may not be redistributed without written permission.*/
 #include <SDL_image.h>
 #include <stdio.h>
 #include <string>
-#include <cmath>
-
-#define PI 3.14159265
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
@@ -215,7 +212,7 @@ bool loadMedia()
 		printf( "Failed to load Foo' texture image!\n" );
 		success = false;
 	}
-
+	
 	//Load background texture
 	if( !gBackgroundTexture.loadFromFile( "10_color_keying/background.png" ) )
 	{
@@ -232,7 +229,7 @@ void close()
 	gFooTexture.free();
 	gBackgroundTexture.free();
 
-	//Destroy window
+	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
@@ -258,16 +255,12 @@ int main( int argc, char* args[] )
 			printf( "Failed to load media!\n" );
 		}
 		else
-		{
+		{	
 			//Main loop flag
 			bool quit = false;
 
 			//Event handler
 			SDL_Event e;
-
-			float xi = 50, yi = SCREEN_WIDTH/2;
-			double xAngle = 0;
-			int xSgn = 1;
 
 			//While application is running
 			while( !quit )
@@ -290,14 +283,7 @@ int main( int argc, char* args[] )
 				gBackgroundTexture.render( 0, 0 );
 
 				//Render Foo' to the screen
-
-				gFooTexture.render( xi  , yi + cos(xAngle)*40 );
-				xAngle = xAngle +0.002;
-                if (xi>550) xSgn=-1;
-                if (xi<10) xSgn = 1;
-                xi=xi+ xSgn*0.1;
-
-
+				gFooTexture.render( 240, 190 );
 
 				//Update screen
 				SDL_RenderPresent( gRenderer );
