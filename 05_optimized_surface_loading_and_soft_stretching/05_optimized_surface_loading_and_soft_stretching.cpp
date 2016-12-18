@@ -7,8 +7,8 @@ and may not be redistributed without written permission.*/
 #include <string>
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
 
 //Starts up SDL and creates window
 bool init();
@@ -24,7 +24,7 @@ SDL_Surface* loadSurface( std::string path );
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
-
+	
 //The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
 
@@ -67,7 +67,7 @@ bool loadMedia()
 	bool success = true;
 
 	//Load stretching surface
-	gStretchedSurface = loadSurface( "Images/Dynamically generated objects in Excel.bmp" );
+	gStretchedSurface = loadSurface( "05_optimized_surface_loading_and_soft_stretching/stretch.bmp" );
 	if( gStretchedSurface == NULL )
 	{
 		printf( "Failed to load stretching image!\n" );
@@ -133,7 +133,7 @@ int main( int argc, char* args[] )
 			printf( "Failed to load media!\n" );
 		}
 		else
-		{
+		{	
 			//Main loop flag
 			bool quit = false;
 
@@ -160,7 +160,7 @@ int main( int argc, char* args[] )
 				stretchRect.w = SCREEN_WIDTH;
 				stretchRect.h = SCREEN_HEIGHT;
 				SDL_BlitScaled( gStretchedSurface, NULL, gScreenSurface, &stretchRect );
-
+			
 				//Update the surface
 				SDL_UpdateWindowSurface( gWindow );
 			}
