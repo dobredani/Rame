@@ -1,29 +1,17 @@
 /*This source code copyrighted by Lazy Foo' Productions (2004-2015)
 and may not be redistributed without written permission.*/
 
-//Using SDL, SDL_image, standard IO, and strings
+//Using SDL, SDL_image, SDL_ttf, standard IO, strings, and string streams
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
+#include <sstream>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
-
-//Button constants
-const int BUTTON_WIDTH = 300;
-const int BUTTON_HEIGHT = 200;
-const int TOTAL_BUTTONS = 4;
-
-enum LButtonSprite
-{
-	BUTTON_SPRITE_MOUSE_OUT = 0,
-	BUTTON_SPRITE_MOUSE_OVER_MOTION = 1,
-	BUTTON_SPRITE_MOUSE_DOWN = 2,
-	BUTTON_SPRITE_MOUSE_UP = 3,
-	BUTTON_SPRITE_TOTAL = 4
-};
 
 //Texture wrapper class
 class LTexture
@@ -37,7 +25,7 @@ class LTexture
 
 		//Loads image at specified path
 		bool loadFromFile( std::string path );
-
+		
 		#ifdef _SDL_TTF_H
 		//Creates image from font string
 		bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
@@ -54,7 +42,7 @@ class LTexture
 
 		//Set alpha modulation
 		void setAlpha( Uint8 alpha );
-
+		
 		//Renders texture at given point
 		void render( int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE );
 
@@ -71,28 +59,36 @@ class LTexture
 		int mHeight;
 };
 
-//The mouse button
-class LButton
+//The application time based timer
+class LTimer
 {
-	public:
-		//Initializes internal variables
-		LButton();
+    public:
+		//Initializes variables
+		LTimer();
 
-		//Sets top left position
-		void setPosition( int x, int y );
+		//The various clock actions
+		void start();
+		void stop();
+		void pause();
+		void unpause();
 
-		//Handles mouse event
-		void handleEvent( SDL_Event* e );
+		//Gets the timer's time
+		Uint32 getTicks();
 
-		//Shows button sprite
-		void render();
+		//Checks the status of the timer
+		bool isStarted();
+		bool isPaused();
 
-	private:
-		//Top left position
-		SDL_Point mPosition;
+    private:
+		//The clock time when the timer started
+		Uint32 mStartTicks;
 
-		//Currently used global sprite
-		LButtonSprite mCurrentSprite;
+		//The ticks stored when the timer was paused
+		Uint32 mPausedTicks;
+
+		//The timer status
+		bool mPaused;
+		bool mStarted;
 };
 
 //Starts up SDL and creates window
@@ -110,12 +106,13 @@ SDL_Window* gWindow = NULL;
 //The window renderer
 SDL_Renderer* gRenderer = NULL;
 
-//Mouse button sprites
-SDL_Rect gSpriteClips[ BUTTON_SPRITE_TOTAL ];
-LTexture gButtonSpriteSheetTexture;
+//Globally used font
+TTF_Font* gFont = NULL;
 
-//Buttons objects
-LButton gButtons[ TOTAL_BUTTONS ];
+//Scene textures
+LTexture gTimeTextTexture;
+LTexture gPausePromptTexture;
+LTexture gStartPromptTexture;
 
 LTexture::LTexture()
 {
@@ -180,11 +177,7 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 
 	//Render text surface
 	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
-	if( textSurface == NULL )
-	{
-		printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
-	}
-	else
+	if( textSurface != NULL )
 	{
 		//Create texture from surface pixels
         mTexture = SDL_CreateTextureFromSurface( gRenderer, textSurface );
@@ -202,7 +195,12 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 		//Get rid of old surface
 		SDL_FreeSurface( textSurface );
 	}
+	else
+	{
+		printf( "Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError() );
+	}
 
+	
 	//Return success
 	return mTexture != NULL;
 }
@@ -231,7 +229,7 @@ void LTexture::setBlendMode( SDL_BlendMode blending )
 	//Set blending function
 	SDL_SetTextureBlendMode( mTexture, blending );
 }
-
+		
 void LTexture::setAlpha( Uint8 alpha )
 {
 	//Modulate texture alpha
@@ -264,84 +262,106 @@ int LTexture::getHeight()
 	return mHeight;
 }
 
-LButton::LButton()
+LTimer::LTimer()
 {
-	mPosition.x = 0;
-	mPosition.y = 0;
+    //Initialize the variables
+    mStartTicks = 0;
+    mPausedTicks = 0;
 
-	mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
+    mPaused = false;
+    mStarted = false;
 }
 
-void LButton::setPosition( int x, int y )
+void LTimer::start()
 {
-	mPosition.x = x;
-	mPosition.y = y;
+    //Start the timer
+    mStarted = true;
+
+    //Unpause the timer
+    mPaused = false;
+
+    //Get the current clock time
+    mStartTicks = SDL_GetTicks();
+	mPausedTicks = 0;
 }
 
-void LButton::handleEvent( SDL_Event* e )
+void LTimer::stop()
 {
-	//If mouse event happened
-	if( e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP )
-	{
-		//Get mouse position
-		int x, y;
-		SDL_GetMouseState( &x, &y );
+    //Stop the timer
+    mStarted = false;
 
-		//Check if mouse is in button
-		bool inside = true;
+    //Unpause the timer
+    mPaused = false;
 
-		//Mouse is left of the button
-		if( x < mPosition.x )
-		{
-			inside = false;
-		}
-		//Mouse is right of the button
-		else if( x > mPosition.x + BUTTON_WIDTH )
-		{
-			inside = false;
-		}
-		//Mouse above the button
-		else if( y < mPosition.y )
-		{
-			inside = false;
-		}
-		//Mouse below the button
-		else if( y > mPosition.y + BUTTON_HEIGHT )
-		{
-			inside = false;
-		}
-
-		//Mouse is outside button
-		if( !inside )
-		{
-			mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
-		}
-		//Mouse is inside button
-		else
-		{
-			//Set mouse over sprite
-			switch( e->type )
-			{
-				case SDL_MOUSEMOTION:
-				mCurrentSprite = BUTTON_SPRITE_MOUSE_OVER_MOTION;
-				break;
-
-				case SDL_MOUSEBUTTONDOWN:
-				mCurrentSprite = BUTTON_SPRITE_MOUSE_DOWN;
-				break;
-
-				case SDL_MOUSEBUTTONUP:
-				mCurrentSprite = BUTTON_SPRITE_MOUSE_UP;
-				break;
-			}
-		}
-	}
+	//Clear tick variables
+	mStartTicks = 0;
+	mPausedTicks = 0;
 }
 
-void LButton::render()
+void LTimer::pause()
 {
-	//Show current button sprite
-	gButtonSpriteSheetTexture.render( mPosition.x, mPosition.y, &gSpriteClips[ mCurrentSprite ] );
+    //If the timer is running and isn't already paused
+    if( mStarted && !mPaused )
+    {
+        //Pause the timer
+        mPaused = true;
+
+        //Calculate the paused ticks
+        mPausedTicks = SDL_GetTicks() - mStartTicks;
+		mStartTicks = 0;
+    }
+}
+
+void LTimer::unpause()
+{
+    //If the timer is running and paused
+    if( mStarted && mPaused )
+    {
+        //Unpause the timer
+        mPaused = false;
+
+        //Reset the starting ticks
+        mStartTicks = SDL_GetTicks() - mPausedTicks;
+
+        //Reset the paused ticks
+        mPausedTicks = 0;
+    }
+}
+
+Uint32 LTimer::getTicks()
+{
+	//The actual timer time
+	Uint32 time = 0;
+
+    //If the timer is running
+    if( mStarted )
+    {
+        //If the timer is paused
+        if( mPaused )
+        {
+            //Return the number of ticks when the timer was paused
+            time = mPausedTicks;
+        }
+        else
+        {
+            //Return the current time minus the start time
+            time = SDL_GetTicks() - mStartTicks;
+        }
+    }
+
+    return time;
+}
+
+bool LTimer::isStarted()
+{
+	//Timer is running and paused or unpaused
+    return mStarted;
+}
+
+bool LTimer::isPaused()
+{
+	//Timer is running and paused
+    return mPaused && mStarted;
 }
 
 bool init()
@@ -391,6 +411,13 @@ bool init()
 					printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
 					success = false;
 				}
+
+				 //Initialize SDL_ttf
+				if( TTF_Init() == -1 )
+				{
+					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+					success = false;
+				}
 			}
 		}
 	}
@@ -403,28 +430,31 @@ bool loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	//Load sprites
-	if( !gButtonSpriteSheetTexture.loadFromFile( "17_mouse_events/button.png" ) )
+	//Open the font
+	gFont = TTF_OpenFont( "23_advanced_timers/lazy.ttf", 28 );
+	if( gFont == NULL )
 	{
-		printf( "Failed to load button sprite texture!\n" );
+		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
 		success = false;
 	}
 	else
 	{
-		//Set sprites
-		for( int i = 0; i < BUTTON_SPRITE_TOTAL; ++i )
+		//Set text color as black
+		SDL_Color textColor = { 0, 0, 0, 255 };
+		
+		//Load stop prompt texture
+		if( !gStartPromptTexture.loadFromRenderedText( "Press S to Start or Stop the Timer", textColor ) )
 		{
-			gSpriteClips[ i ].x = 0;
-			gSpriteClips[ i ].y = i * 200;
-			gSpriteClips[ i ].w = BUTTON_WIDTH;
-			gSpriteClips[ i ].h = BUTTON_HEIGHT;
+			printf( "Unable to render start/stop prompt texture!\n" );
+			success = false;
 		}
-
-		//Set buttons in corners
-		gButtons[ 0 ].setPosition( 0, 0 );
-		gButtons[ 1 ].setPosition( SCREEN_WIDTH - BUTTON_WIDTH, 0 );
-		gButtons[ 2 ].setPosition( 0, SCREEN_HEIGHT - BUTTON_HEIGHT );
-		gButtons[ 3 ].setPosition( SCREEN_WIDTH - BUTTON_WIDTH, SCREEN_HEIGHT - BUTTON_HEIGHT );
+		
+		//Load pause prompt texture
+		if( !gPausePromptTexture.loadFromRenderedText( "Press P to Pause or Unpause the Timer", textColor ) )
+		{
+			printf( "Unable to render pause/unpause prompt texture!\n" );
+			success = false;
+		}
 	}
 
 	return success;
@@ -433,15 +463,22 @@ bool loadMedia()
 void close()
 {
 	//Free loaded images
-	gButtonSpriteSheetTexture.free();
+	gTimeTextTexture.free();
+	gStartPromptTexture.free();
+	gPausePromptTexture.free();
 
-	//Destroy window
+	//Free global font
+	TTF_CloseFont( gFont );
+	gFont = NULL;
+
+	//Destroy window	
 	SDL_DestroyRenderer( gRenderer );
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 	gRenderer = NULL;
 
 	//Quit SDL subsystems
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -461,12 +498,21 @@ int main( int argc, char* args[] )
 			printf( "Failed to load media!\n" );
 		}
 		else
-		{
+		{	
 			//Main loop flag
 			bool quit = false;
 
 			//Event handler
 			SDL_Event e;
+
+			//Set text color as black
+			SDL_Color textColor = { 0, 0, 0, 255 };
+
+			//The application timer
+			LTimer timer;
+
+			//In memory text stream
+			std::stringstream timeText;
 
 			//While application is running
 			while( !quit )
@@ -479,23 +525,54 @@ int main( int argc, char* args[] )
 					{
 						quit = true;
 					}
-
-					//Handle button events
-					for( int i = 0; i < TOTAL_BUTTONS; ++i )
+					//Reset start time on return keypress
+					else if( e.type == SDL_KEYDOWN )
 					{
-						gButtons[ i ].handleEvent( &e );
+						//Start/stop
+						if( e.key.keysym.sym == SDLK_s )
+						{
+							if( timer.isStarted() )
+							{
+								timer.stop();
+							}
+							else
+							{
+								timer.start();
+							}
+						}
+						//Pause/unpause
+						else if( e.key.keysym.sym == SDLK_p )
+						{
+							if( timer.isPaused() )
+							{
+								timer.unpause();
+							}
+							else
+							{
+								timer.pause();
+							}
+						}
 					}
+				}
+
+				//Set text to be rendered
+				timeText.str( "" );
+				timeText << "Seconds since start time " << ( timer.getTicks() / 1000.f ) ; 
+
+				//Render text
+				if( !gTimeTextTexture.loadFromRenderedText( timeText.str().c_str(), textColor ) )
+				{
+					printf( "Unable to render time texture!\n" );
 				}
 
 				//Clear screen
 				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 				SDL_RenderClear( gRenderer );
 
-				//Render buttons
-				for( int i = 0; i < TOTAL_BUTTONS; ++i )
-				{
-					gButtons[ i ].render();
-				}
+				//Render textures
+				gStartPromptTexture.render( ( SCREEN_WIDTH - gStartPromptTexture.getWidth() ) / 2, 0 );
+				gPausePromptTexture.render( ( SCREEN_WIDTH - gPausePromptTexture.getWidth() ) / 2, gStartPromptTexture.getHeight() );
+				gTimeTextTexture.render( ( SCREEN_WIDTH - gTimeTextTexture.getWidth() ) / 2, ( SCREEN_HEIGHT - gTimeTextTexture.getHeight() ) / 2 );
 
 				//Update screen
 				SDL_RenderPresent( gRenderer );
