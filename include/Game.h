@@ -2,6 +2,7 @@
 #define GAME_H
 #include "Worm.h"
 #include "SDL.h"
+#include "GameMenu.h"
 
 class Game
 {
@@ -11,9 +12,11 @@ class Game
         Game(unsigned char xPlayers);
         virtual ~Game();
         void SetRenderer(SDL_Renderer* oValue) { oRenderer = oValue;}
+        void SetGameMenu(GameMenu* oValue) { oGameMenu = oValue;}
         Worm* SpawnNewWorm(unsigned char xWorm);
         void SpawnWorms();
         void RenderWorms();
+        double SteerWorm(Player* oPlayer);
     protected:
 
     private:
@@ -21,6 +24,7 @@ class Game
         unsigned char xPlayers;
         SDL_Renderer* oRenderer;
         long long xFramesCount = 0;
+        GameMenu *oGameMenu;
 };
 
 #endif // GAME_H

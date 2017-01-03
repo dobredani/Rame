@@ -18,6 +18,7 @@ class GameMenu
         string GetGameType() { return sGameType; }
         void SetGameType(string val) { sGameType = val; }
 
+        Player* GetPlayer(unsigned char xPlayer);
     protected:
 
     private:

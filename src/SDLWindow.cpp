@@ -28,7 +28,7 @@ bool SDLWindow::initSDL()
 
     SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, ANISOTROPIC_FILTERING );
 
-    oWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+    oWindow = SDL_CreateWindow( "Joc Rame", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
     if( oWindow == NULL )
     {
         printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );

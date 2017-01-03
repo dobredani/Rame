@@ -16,6 +16,7 @@ int main( int argc, char* args[] )
     Game *oGame = new Game(3);
     oGame->SetRenderer(oRenderer);
     oGame->SpawnWorms();
+    oGame->SetGameMenu(new GameMenu);
 
     gSpriteSheetTexture = new Texture(oRenderer);
 

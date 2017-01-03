@@ -77,6 +77,6 @@ void Texture::Render(unsigned int xLeft, unsigned int xTop , SDL_Rect* oSpriteRe
 	}
 
 	//Render to screen
-	SDL_RenderCopy( oRenderer, oTexture, oSpriteRect, &renderQuad );
+	SDL_RenderCopyEx( oRenderer, oTexture, oSpriteRect, &renderQuad, xAngle, &ptCenter, SDL_FLIP_NONE);
 }
 

@@ -1,3 +1,5 @@
+#ifndef PUBSTRUC_H
+#define PUBSTRUC_H
 #include <string>
 #include <SDL.h>
 
@@ -19,3 +21,5 @@ struct PrecissionPoint{
     double x;
     double y;
     };
+
+#endif

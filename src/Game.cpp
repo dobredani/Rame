@@ -25,8 +25,8 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
     oWorm->SetWormIndex(xWorm);
     oWorm->SetDirection(5.2);
     oWorm->SetHeadPos((PrecissionPoint){250 + xWorm*60,100});
-    oWorm->SetSpeed(110);
-    oWorm->AddBodyParts(8);
+    oWorm->SetSpeed(80);
+    oWorm->AddBodyParts(12);
 
     Texture *oTexture = new Texture(oRenderer);
     oTexture->LoadImage("Images/Worm Sprites.png");
@@ -35,11 +35,26 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
     return oWorm;
 }
 
+double Game::SteerWorm(Player* oPlayer)
+{
+    if (oPlayer == NULL) return 0;
+
+    const unsigned char *arrKeybState = SDL_GetKeyboardState(NULL);
+    if (arrKeybState[oPlayer->xLeftKeyCode]) return -0.7;
+    if (arrKeybState[oPlayer->xRightKeyCode]) return 0.7;
+    return 0;
+
+    if (arrKeybState[SDL_SCANCODE_RIGHT] && arrKeybState[SDL_SCANCODE_UP]) {
+    }
+
+}
+
 void Game::RenderWorms()
 {
     for (unsigned char xi = 0; xi<xPlayers; xi++)
         {
-            arrWorms[xi]->Move(xFramesCount++);
+            arrWorms[xi]->Move(SteerWorm(oGameMenu->GetPlayer(xi)),++xFramesCount);
             arrWorms[xi]->Render();
         }
 }
+
