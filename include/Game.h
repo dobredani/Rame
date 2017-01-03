@@ -20,6 +20,7 @@ class Game
         Worm *arrWorms[6];
         unsigned char xPlayers;
         SDL_Renderer* oRenderer;
+        long long xFramesCount = 0;
 };
 
 #endif // GAME_H

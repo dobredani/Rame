@@ -22,9 +22,10 @@ void Game::SpawnWorms()
 Worm* Game::SpawnNewWorm(unsigned char xWorm)
 {
     Worm * oWorm = new Worm;
-    oWorm->SetDirection(0.5);
-    oWorm->SetHeadPos((SDL_Point){50,100});
-    oWorm->SetSpeed(1);
+    oWorm->SetWormIndex(xWorm);
+    oWorm->SetDirection(5.2);
+    oWorm->SetHeadPos((PrecissionPoint){250 + xWorm*60,100});
+    oWorm->SetSpeed(110);
     oWorm->AddBodyParts(8);
 
     Texture *oTexture = new Texture(oRenderer);
@@ -37,5 +38,8 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
 void Game::RenderWorms()
 {
     for (unsigned char xi = 0; xi<xPlayers; xi++)
-        arrWorms[xi]->Render();
+        {
+            arrWorms[xi]->Move(xFramesCount++);
+            arrWorms[xi]->Render();
+        }
 }

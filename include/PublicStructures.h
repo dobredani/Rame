@@ -14,3 +14,8 @@ struct Player{
     SDL_Keycode xRightKeyCode; // https://wiki.libsdl.org/SDL_Keycode
     bool bIsAIplayer;
     };
+
+struct PrecissionPoint{
+    double x;
+    double y;
+    };

@@ -2,6 +2,7 @@
 #define WORM_H
 #include "SDL.h"
 #include "Texture.h"
+#include "PublicStructures.h"
 
 class Worm
 {
@@ -10,34 +11,38 @@ class Worm
         virtual ~Worm();
 
         void SetDirection(double val) { xDirection = val; }
-        void SetSpeed(double val) { xSpeed = val; }
-        void SetHeadPos(SDL_Point val) { ptHeadPos = val; }
+        void SetSpeed(unsigned char val) { xSpeed = 5+(255-val)/12; }
+        void SetHeadPos(PrecissionPoint val) { ptHeadPos = val; }
         void SetTexture(Texture *oValue) { oTexture = oValue; }
+        void SetWormIndex(unsigned char xValue) { xWormIndex = xValue; oHeadSprite = {1,1 + xValue * 62,61,61};}
         SDL_Rect GetPreCollisionBox() { return oPreCollisionBox; }
         unsigned short GetWormBodyLength() { return xWormBodyLength; }
-        SDL_Point GetGravityPoint() { return ptGravityPoint; }
+        PrecissionPoint GetGravityPoint() { return ptGravityPoint; }
 
         bool AddBodyParts(unsigned char xParts);
         void Render();
+        void Move(long long xFrame);
     protected:
 
     private:
 
         struct WormBody{
-            SDL_Point ptRenderPosition;
+            PrecissionPoint ptRenderPosition;
             SDL_Rect oSpriteRect;
             WormBody *pNextWormBody;
         };
 
         double xDirection;
-        double xSpeed;
-        SDL_Point ptHeadPos;
+        unsigned char xSpeed;
+        PrecissionPoint ptHeadPos;
         WormBody *lstWormBody = NULL;
         SDL_Rect oPreCollisionBox;
         unsigned short xWormBodyLength = 0;
-        SDL_Point ptGravityPoint;
+        PrecissionPoint ptGravityPoint;
         Texture *oTexture;
-        SDL_Rect oHeadSprite = {1,1,61,61};
+        SDL_Rect oHeadSprite;
+        unsigned char xWormIndex;
+        unsigned int xWormStretch = 24;
 
         void RenderWormHead();
 };
