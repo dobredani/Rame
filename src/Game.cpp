@@ -24,9 +24,9 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
     Worm * oWorm = new Worm;
     oWorm->SetWormIndex(xWorm);
     oWorm->SetDirection(5.2);
-    oWorm->SetHeadPos((PrecissionPoint){250 + xWorm*60,100});
+    oWorm->SetHeadPos((PrecissionPoint){50 + xWorm*60,100});
     oWorm->SetSpeed(80);
-    oWorm->AddBodyParts(12);
+    oWorm->AddBodyParts(6);
 
     Texture *oTexture = new Texture(oRenderer);
     oTexture->LoadImage("Images/Worm Sprites.png");

@@ -29,6 +29,7 @@ class Worm
         struct WormBody{
             PrecissionPoint ptRenderPosition;
             SDL_Rect oSpriteRect;
+            double xDirection;
             WormBody *pNextWormBody;
         };
 
@@ -44,6 +45,9 @@ class Worm
         unsigned char xWormIndex;
         unsigned int xWormStretch = 24;
         signed short xCrawlIndex = 0;
+        unsigned char xBounceRadius = 20;
+        PrecissionPoint ptLeftBounceCircle;
+        PrecissionPoint ptRightBounceCircle;
 
         void RenderWormHead();
 };

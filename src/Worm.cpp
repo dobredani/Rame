@@ -37,7 +37,7 @@ void Worm::Render()
     WormBody* pBodyPart = lstWormBody;
     while (pBodyPart != NULL)
     {
-        oTexture->Render(pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y, &pBodyPart->oSpriteRect, 0.9);
+        oTexture->Render(pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y,pBodyPart->xDirection, &pBodyPart->oSpriteRect, 0.9);
         pBodyPart = pBodyPart->pNextWormBody;
     }
 
@@ -46,8 +46,8 @@ void Worm::Render()
 
 void Worm::RenderWormHead()
 {
-    oTexture->SetAngle(xDirection/(2*M_PI)*360 +90);
-    oTexture->Render(ptHeadPos.x, ptHeadPos.y, &oHeadSprite, 0.9);
+    double xAngle = xDirection/(2*M_PI)*360 +90;
+    oTexture->Render(ptHeadPos.x, ptHeadPos.y, xAngle, &oHeadSprite, 0.9);
 }
 
 void Worm::Move(double xSteer, long long xFrame)
@@ -65,11 +65,17 @@ void Worm::Move(double xSteer, long long xFrame)
 //            xCoef1 = 0;
         if (pBodyPart->pNextWormBody != NULL)
             {
+                pBodyPart->xDirection = GetSegmentAngle(pBodyPart->pNextWormBody->ptRenderPosition.x, pBodyPart->pNextWormBody->ptRenderPosition.y, pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y);
+                pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 +90;
+
                 pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (pBodyPart->pNextWormBody->ptRenderPosition.x - pBodyPart->ptRenderPosition.x)/(xSpeed - xCoef1);
                 pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (pBodyPart->pNextWormBody->ptRenderPosition.y - pBodyPart->ptRenderPosition.y)/(xSpeed - xCoef1);
             }
         else
             {
+                pBodyPart->xDirection = GetSegmentAngle(ptHeadPos.x, ptHeadPos.y, pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y);
+                pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 +90;
+
                 pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (ptHeadPos.x - pBodyPart->ptRenderPosition.x)/(xSpeed - xCoef1);
                 pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (ptHeadPos.y - pBodyPart->ptRenderPosition.y)/(xSpeed - xCoef1);
             }
@@ -85,4 +91,21 @@ void Worm::Move(double xSteer, long long xFrame)
 //    xCrawlIndex --;
 //    if (xCrawlIndex == -1) xCrawlIndex = xWormBodyLength+1;
 
+}
+
+double GetSegmentAngle(double x1, double y1, double x2, double y2)
+{
+    double x = x2-x1;
+    double y = y2-y1;
+
+    if (x == 0 && y == 0)
+        return 0;
+    else
+    {
+        double xAngle = atan2(x,y);
+        if (xAngle>=0)
+            return xAngle;
+        else
+            return 2*M_PI + xAngle;
+    }
 }

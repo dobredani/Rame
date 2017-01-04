@@ -62,8 +62,9 @@ bool Texture::LoadImage(string sFilePath)
 	return oTexture != NULL;
 }
 
-void Texture::Render(unsigned int xLeft, unsigned int xTop , SDL_Rect* oSpriteRect, double xZoomFactor )
+void Texture::Render(unsigned int xLeft, unsigned int xTop, double xAngle, SDL_Rect* oSpriteRect, double xZoomFactor)
 {
+
     if (oRenderer == NULL) return;
 
 	//Set rendering space and render to screen
@@ -74,8 +75,17 @@ void Texture::Render(unsigned int xLeft, unsigned int xTop , SDL_Rect* oSpriteRe
 	{
 		renderQuad.w = oSpriteRect->w * xZoomFactor;
 		renderQuad.h = oSpriteRect->h * xZoomFactor;
+
+//        ptCenter.x = oSpriteRect->x + renderQuad.w/2;
+//        ptCenter.y = oSpriteRect->y + renderQuad.h/2;
+
 	}
 
+    ptCenter.x = renderQuad.w/2;
+    ptCenter.y = renderQuad.h/2;
+
+//	if (xAngle<2.5 && xAngle>1)
+//        xAngle = 2;
 	//Render to screen
 	SDL_RenderCopyEx( oRenderer, oTexture, oSpriteRect, &renderQuad, xAngle, &ptCenter, SDL_FLIP_NONE);
 }
