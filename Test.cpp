@@ -13,7 +13,7 @@ int main( int argc, char* args[] )
 
     SDL_Renderer* oRenderer = oSDLWindow.GetRenderer();
     Texture *gSpriteSheetTexture;
-    Game *oGame = new Game(5);
+    Game *oGame = new Game(6);
     oGame->SetRenderer(oRenderer);
     oGame->SpawnWorms();
     oGame->SetGameMenu(new GameMenu);

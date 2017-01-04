@@ -52,44 +52,32 @@ void Worm::RenderWormHead()
 
 void Worm::Move(double xSteer, long long xFrame)
 {
-    double xCrawl = xWormBodyLength+1;
-    double xCoef1 = 0; //xFrame/xWormBodyLength; // Phase Best so far: xFrame/18
-//    double xCoef2 = 1.0; // Frequency Best so far: 1.5
-//    double xCoef3 = 6; // Amplitude Best so far: 6
     WormBody* pBodyPart = lstWormBody;
     while (pBodyPart != NULL)
     {
-//        if (abs(xCrawlIndex-xCrawl) < min(6,xWormBodyLength/2))
-//            xCoef1 =sin(M_PI * abs(xCrawlIndex-xCrawl) / min(6,xWormBodyLength/2))*xWormStretch;
-//        else
-//            xCoef1 = 0;
         if (pBodyPart->pNextWormBody != NULL)
             {
                 pBodyPart->xDirection = GetSegmentAngle(pBodyPart->pNextWormBody->ptRenderPosition.x, pBodyPart->pNextWormBody->ptRenderPosition.y, pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y);
-                pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 +90;
+                pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 ;
 
-                pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (pBodyPart->pNextWormBody->ptRenderPosition.x - pBodyPart->ptRenderPosition.x)/(xSpeed - xCoef1);
-                pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (pBodyPart->pNextWormBody->ptRenderPosition.y - pBodyPart->ptRenderPosition.y)/(xSpeed - xCoef1);
+                pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (pBodyPart->pNextWormBody->ptRenderPosition.x - pBodyPart->ptRenderPosition.x)/xSpeed;
+                pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (pBodyPart->pNextWormBody->ptRenderPosition.y - pBodyPart->ptRenderPosition.y)/xSpeed;
             }
         else
             {
                 pBodyPart->xDirection = GetSegmentAngle(ptHeadPos.x, ptHeadPos.y, pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y);
-                pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 +90;
+                pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 ;
 
-                pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (ptHeadPos.x - pBodyPart->ptRenderPosition.x)/(xSpeed - xCoef1);
-                pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (ptHeadPos.y - pBodyPart->ptRenderPosition.y)/(xSpeed - xCoef1);
+                pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (ptHeadPos.x - pBodyPart->ptRenderPosition.x)/xSpeed;
+                pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (ptHeadPos.y - pBodyPart->ptRenderPosition.y)/xSpeed;
             }
 
-        xCrawl--;
         pBodyPart = pBodyPart->pNextWormBody;
     }
 
-    ptHeadPos.x = ptHeadPos.x + (xWormStretch - xCoef1)*cos(xDirection)/xSpeed;
-    ptHeadPos.y = ptHeadPos.y + (xWormStretch - xCoef1)*sin(xDirection)/xSpeed;
+    ptHeadPos.x = ptHeadPos.x + (xWormStretch)*cos(xDirection)/xSpeed;
+    ptHeadPos.y = ptHeadPos.y + (xWormStretch)*sin(xDirection)/xSpeed;
     xDirection += (xSteer+0.2)/xSpeed;
-
-//    xCrawlIndex --;
-//    if (xCrawlIndex == -1) xCrawlIndex = xWormBodyLength+1;
 
 }
 
