@@ -97,3 +97,8 @@ double GetSegmentAngle(double x1, double y1, double x2, double y2)
             return 2*M_PI + xAngle;
     }
 }
+
+double Worm::BounceScreen()
+{
+
+}
