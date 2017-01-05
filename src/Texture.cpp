@@ -67,10 +67,8 @@ void Texture::Render(unsigned int xLeft, unsigned int xTop, double xAngle, SDL_R
 
     if (oRenderer == NULL) return;
 
-	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { xLeft, xTop, xWidth, xHeight };
 
-	//Set clip rendering dimensions
 	if( oSpriteRect != NULL )
 	{
 		renderQuad.w = oSpriteRect->w * xZoomFactor;
@@ -84,9 +82,7 @@ void Texture::Render(unsigned int xLeft, unsigned int xTop, double xAngle, SDL_R
     ptCenter.x = renderQuad.w/2;
     ptCenter.y = renderQuad.h/2;
 
-//	if (xAngle<2.5 && xAngle>1)
-//        xAngle = 2;
-	//Render to screen
 	SDL_RenderCopyEx( oRenderer, oTexture, oSpriteRect, &renderQuad, xAngle, &ptCenter, SDL_FLIP_NONE);
 }
+
 

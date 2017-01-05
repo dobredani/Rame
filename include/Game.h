@@ -16,7 +16,10 @@ class Game
         Worm* SpawnNewWorm(unsigned char xWorm);
         void SpawnWorms();
         void RenderWorms();
+        void MoveWorms();
         double SteerWorm(Player* oPlayer);
+        void PreCollision();
+
     protected:
 
     private:
@@ -25,6 +28,7 @@ class Game
         SDL_Renderer* oRenderer;
         long long xFramesCount = 0;
         GameMenu *oGameMenu;
+        bool CheckPrecollision(Worm *oWorm1, Worm *oWorm2);
 };
 
 #endif // GAME_H

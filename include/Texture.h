@@ -12,13 +12,13 @@ class Texture
         Texture(SDL_Renderer* argRenderer);
         virtual ~Texture();
 
-//        void SetAngle(double xValue) { xAngle = xValue;}
         bool LoadImage(string sFilePath);
         void FreeMemory();
         void Render(unsigned int xLeft, unsigned int xTop, double xAngle, SDL_Rect* oSpriteRect = NULL, double xZoomFactor = 1.0);
 
         unsigned int GetWidth() { return xWidth; }
         unsigned int GetHeight() { return xHeight; }
+        void DrawOutlineRect(SDL_Rect oRect, SDL_Color oColor) {SDL_SetRenderDrawColor( oRenderer, oColor.r, oColor.g, oColor.b, oColor.a ); SDL_RenderDrawRect( oRenderer, &oRect );}
 
     protected:
 
@@ -27,7 +27,6 @@ class Texture
         SDL_Renderer* oRenderer;
         unsigned int xWidth;
         unsigned int xHeight;
-//        double xAngle = 0;
         SDL_Point ptCenter;
 };
 

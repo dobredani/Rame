@@ -26,7 +26,7 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
     oWorm->SetDirection(5.2);
     oWorm->SetHeadPos((PrecissionPoint){50 + xWorm*60,100});
     oWorm->SetSpeed(80);
-    oWorm->AddBodyParts(6);
+    oWorm->AddBodyParts(12);
 
     Texture *oTexture = new Texture(oRenderer);
     oTexture->LoadImage("Images/Worm Sprites.png");
@@ -49,12 +49,43 @@ double Game::SteerWorm(Player* oPlayer)
 
 }
 
+void Game::MoveWorms()
+{
+    for (unsigned char xi = 0; xi<xPlayers; xi++)
+        arrWorms[xi]->Move(SteerWorm(oGameMenu->GetPlayer(xi)),++xFramesCount);
+}
+
 void Game::RenderWorms()
 {
     for (unsigned char xi = 0; xi<xPlayers; xi++)
-        {
-            arrWorms[xi]->Move(SteerWorm(oGameMenu->GetPlayer(xi)),++xFramesCount);
-            arrWorms[xi]->Render();
-        }
+        arrWorms[xi]->Render();
 }
 
+bool Game::CheckPrecollision(Worm *oWorm1, Worm *oWorm2)
+{
+    if (oWorm1->GetPreCollisionBox().x > oWorm2->GetPreCollisionBox().x + oWorm2->GetPreCollisionBox().w) return false;
+    if (oWorm1->GetPreCollisionBox().y > oWorm2->GetPreCollisionBox().y + oWorm2->GetPreCollisionBox().h) return false;
+    if (oWorm1->GetPreCollisionBox().x + oWorm1->GetPreCollisionBox().w < oWorm2->GetPreCollisionBox().x) return false;
+    if (oWorm1->GetPreCollisionBox().y + oWorm1->GetPreCollisionBox().h < oWorm2->GetPreCollisionBox().y) return false;
+    return true;
+}
+
+void Game::PreCollision()
+{
+    for (unsigned char xi = 0; xi<xPlayers; xi++)
+        arrWorms[xi]->SetInPreCollision(false);
+
+    for (unsigned char xi = 0; xi<xPlayers; xi++)
+    {
+        if (! arrWorms[xi]->GetInPreCollision()) arrWorms[xi]->SetPreCollisionBoxColor((SDL_Color){0x00,0xFF,0x00,0xFF});
+
+        for (unsigned char yi = xi+1; yi<xPlayers; yi++)
+            if (CheckPrecollision(arrWorms[xi], arrWorms[yi]))
+            {
+                arrWorms[xi]->SetPreCollisionBoxColor((SDL_Color){0xFF,0x00,0x00,0xFF});
+                arrWorms[yi]->SetPreCollisionBoxColor((SDL_Color){0xFF,0x00,0x00,0xFF});
+                arrWorms[xi]->SetInPreCollision(true);
+                arrWorms[yi]->SetInPreCollision(true);
+            }
+    }
+}

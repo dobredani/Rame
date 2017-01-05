@@ -35,6 +35,8 @@ int main( int argc, char* args[] )
         SDL_SetRenderDrawColor( oRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
         SDL_RenderClear( oRenderer );
 
+        oGame->MoveWorms();
+        oGame->PreCollision();
         oGame->RenderWorms();
 
         //Update screen
