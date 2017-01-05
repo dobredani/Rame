@@ -22,6 +22,7 @@ class Worm
         bool AddBodyParts(unsigned char xParts);
         void Render();
         void Move(double xSteer, long long xFrame);
+        double BounceScreen();
     protected:
 
     private:
