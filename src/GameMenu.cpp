@@ -36,3 +36,42 @@ Player* GameMenu::GetPlayer(unsigned char xPlayer)
 {
     return oPlayer[xPlayer];
 }
+
+void GameMenu::PollEvent(SDL_Event e)
+{
+    switch(e.type)
+    {
+    case SDL_QUIT:
+        bExit = true;
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if(e.motion.x>=SCREEN_WIDTH/3 && e.motion.x<=SCREEN_WIDTH/3+buton1_rect.w && e.motion.y>=buton1_rect.h && e.motion.y<=2*buton1_rect.h)
+        {
+            buton1_imagine->FreeMemory();
+            buton2_imagine->FreeMemory();
+            buton3_imagine->FreeMemory();
+            bNewGame =true;
+        }
+        if(e.motion.x>=SCREEN_WIDTH/3 && e.motion.x<=SCREEN_WIDTH/3+buton2_rect.w && e.motion.y>=2*buton2_rect.h && e.motion.y<=3*buton2_rect.h)
+        {
+            bOptions=true;
+        }
+        if(e.motion.x>=SCREEN_WIDTH/3 && e.motion.x<=SCREEN_WIDTH/3+buton3_rect.w && e.motion.y>=3*buton3_rect.h && e.motion.y<=4*buton3_rect.h)
+        {
+            bExit = true;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
+void GameMenu::ShowMainMenu()
+{
+
+}
+
+void GameMenu::ShowOptionsMenu()
+{
+
+}
