@@ -4,17 +4,27 @@
 	<ActiveTarget name="Debug" />
 	<File name="src\Worm.cpp" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2" topLine="0" />
+			<Cursor1 position="1313" topLine="26" />
 		</Cursor>
 	</File>
-	<File name="src\GameMenu.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\Texture.cpp" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="158" topLine="0" />
+			<Cursor1 position="1250" topLine="48" />
+		</Cursor>
+	</File>
+	<File name="src\Game.cpp" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1378" topLine="43" />
 		</Cursor>
 	</File>
 	<File name="include\Worm.h" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="2" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include\Texture.h" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="57" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="include\PublicStructures.h" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -24,17 +34,22 @@
 	</File>
 	<File name="include\GameMenu.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="805" topLine="10" />
+			<Cursor1 position="734" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="include\Game.h" open="1" top="1" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include\Game.h" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="260" topLine="0" />
+			<Cursor1 position="539" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="Test.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src\GameMenu.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="127" topLine="0" />
+			<Cursor1 position="623" topLine="10" />
+		</Cursor>
+	</File>
+	<File name="Test.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="863" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>
