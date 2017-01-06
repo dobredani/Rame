@@ -7,6 +7,7 @@
 #define GAME_DIFFICULTY_EASY 1;
 #define GAME_DIFFICULTY_MEDIUM 2;
 #define GAME_DIFFICULTY_HARD 3;
+const bool DEBUG_SHOW = true;
 
 using namespace std;
 
@@ -22,6 +23,15 @@ struct PrecissionPoint{
     double x;
     double y;
     };
+
+struct PrecissionRect{
+    double x;
+    double y;
+    double w;
+    double h;
+    };
+
+SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect);
 
 double GetSegmentAngle(double x1, double y1, double x2, double y2);
 
