@@ -19,6 +19,8 @@ class Game
         Worm* SpawnNewWorm(unsigned char xWorm);
         void SpawnWorms();
         void RenderWorms();
+        void MoveWorms();
+
         double SteerWorm(Player* oPlayer);
     protected:
 

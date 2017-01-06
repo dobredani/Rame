@@ -1,6 +1,14 @@
 #include "GameMenu.h"
 #include "fstream"
 
+void Dimensions(SDL_Rect &rect,int w,int h, int x, int y)
+{
+    rect.w = w;
+    rect.h = h;
+    rect.x = x;
+    rect.y = y;
+}
+
 GameMenu::GameMenu()
 {
     sSettingsFileName = "Settings.ini";
@@ -68,6 +76,20 @@ void GameMenu::PollEvent(SDL_Event e)
 
 void GameMenu::ShowMainMenu()
 {
+    buton1_imagine = new Texture(oRenderer);
+    buton1_imagine->LoadImage("ButoaneMeniu/buton1.bmp");
+    Dimensions(buton1_rect,250,100,SCREEN_WIDTH/3,SCREEN_HEIGHT/5);
+    buton1_imagine->Render(SCREEN_WIDTH/3,SCREEN_HEIGHT/5,0.0,NULL,1.0);
+
+    buton2_imagine = new Texture(oRenderer);
+    buton2_imagine->LoadImage("ButoaneMeniu/buton2.bmp");
+    Dimensions(buton2_rect,250,100,SCREEN_WIDTH/3,2*buton1_rect.h);
+    buton2_imagine->Render(SCREEN_WIDTH/3,2*SCREEN_HEIGHT/5,0.0,NULL,1.0);
+
+    buton3_imagine = new Texture(oRenderer);
+    buton3_imagine->LoadImage("ButoaneMeniu/buton3.bmp");
+    Dimensions(buton3_rect,250,100,SCREEN_WIDTH/3,3*buton1_rect.h);
+    buton3_imagine->Render(SCREEN_WIDTH/3,3*SCREEN_HEIGHT/5,0.0,NULL,1.0);
 
 }
 

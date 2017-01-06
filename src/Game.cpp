@@ -8,6 +8,7 @@ Game::Game(unsigned char xPlayersCount)
 Game::~Game()
 {
     //dtor
+    xPlayers = 0;
 }
 
 void Game::SpawnWorms()
