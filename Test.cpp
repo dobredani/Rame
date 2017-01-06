@@ -1,9 +1,12 @@
+#include "GameMenu.h"
 #include "Texture.h"
 #include "Game.h"
 #include "SDLWindow.h"
 
 int main( int argc, char* args[] )
 {
+    Menu menu;
+    menu.MenuLoop();
     SDLWindow oSDLWindow;
     if (!oSDLWindow.initSDL())
     {
