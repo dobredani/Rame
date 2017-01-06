@@ -12,13 +12,14 @@ int main( int argc, char* args[] )
     }
 
     SDL_Renderer* oRenderer = oSDLWindow.GetRenderer();
-    Texture *gSpriteSheetTexture;
-    Game *oGame = new Game(6);
-    oGame->SetRenderer(oRenderer);
-    oGame->SpawnWorms();
-    oGame->SetGameMenu(new GameMenu);
+//    Texture *gSpriteSheetTexture;
+    GameMenu *oGameMenu = new GameMenu;
+    oGameMenu->SetRenderer(oRenderer);
 
-    gSpriteSheetTexture = new Texture(oRenderer);
+
+    Game *oGame = new Game(6);
+
+//    gSpriteSheetTexture = new Texture(oRenderer);
 
     bool bQuit = false;
     SDL_Event eSDLevent;
@@ -29,20 +30,44 @@ int main( int argc, char* args[] )
         {
             if( eSDLevent.type == SDL_QUIT ) bQuit = true;
 
+            if (oGame->GetGameOver()) oGameMenu->PollEvent(eSDLevent);
         }
+
+        if (oGameMenu->ClickedNewGame())
+        {
+            oGame = NULL;
+            oGame = new Game(6);
+            oGame->SetRenderer(oRenderer);
+            oGame->SpawnWorms();
+            oGame->SetGameMenu(oGameMenu);
+            oGame->SetGameOver(false);
+        }
+
+        if (oGameMenu->ClickedExit()) bQuit = true;
 
         //Clear screen
         SDL_SetRenderDrawColor( oRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
         SDL_RenderClear( oRenderer );
 
-        oGame->RenderWorms();
+        if (oGame->GetGameOver())
+        {
+            if (oGameMenu->ClickedOptions())
+                oGameMenu->ShowOptionsMenu();
+            else
+                oGameMenu->ShowMainMenu();
+        }
+        else
+        {
+            oGame->RenderWorms();
+        }
+
 
         //Update screen
         SDL_RenderPresent( oRenderer );
     }
 
 	//Free resources and close SDL
-	gSpriteSheetTexture->FreeMemory();
+//	gSpriteSheetTexture->FreeMemory();
 	oSDLWindow.closeSDL();
 
 	return 0;
