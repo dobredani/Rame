@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <iostream>
+//#include "PublicStructures.h"
 const int SCREEN_WIDTH = 750;
 const int SCREEN_HEIGHT = 500;
 
@@ -29,6 +30,27 @@ private:
 
     SDL_Texture* buton3_imagine;
     SDL_Rect buton3_rect;
+
+    /*public:
+        GameMenu();
+        ~GameMenu();
+
+        unsigned char GetPlayersCount() { return xPlayersCount; }
+        void SetPlayersCount(unsigned char val) { xPlayersCount = val; }
+        unsigned char GetDifficulty() { return xDifficulty; }
+        void SetDifficulty(unsigned char val) { xDifficulty = val; }
+        string GetGameType() { return sGameType; }
+        void SetGameType(string val) { sGameType = val; }
+
+        Player* GetPlayer(unsigned char xPlayer);
+    protected:
+
+    private:
+        string sSettingsFileName;
+        unsigned char xPlayersCount;
+        unsigned char xDifficulty;
+        string sGameType;
+        Player *oPlayer[5];*/
 };
 
 #endif // GAME_MENU_H_INCLUDED
