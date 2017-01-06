@@ -20,6 +20,7 @@ class Game
         void SpawnWorms();
         void RenderWorms();
         void MoveWorms();
+        void PreCollision();
 
         double SteerWorm(Player* oPlayer);
     protected:
@@ -31,6 +32,7 @@ class Game
         long long xFramesCount = 0;
         GameMenu *oGameMenu;
         bool bGameOver = true;
+        bool CheckPrecollision(Worm *oWorm1, Worm *oWorm2);
 };
 
 #endif // GAME_H
