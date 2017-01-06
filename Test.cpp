@@ -58,6 +58,8 @@ int main( int argc, char* args[] )
         }
         else
         {
+            oGame->MoveWorms();
+            oGame->PreCollision();
             oGame->RenderWorms();
         }
 
