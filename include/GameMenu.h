@@ -26,7 +26,7 @@ class GameMenu
         unsigned char xPlayersCount;
         unsigned char xDifficulty;
         string sGameType;
-        Player *oPlayer[5];
+        Player *oPlayer[6];
 };
 
 #endif // GAMEMENU_H
