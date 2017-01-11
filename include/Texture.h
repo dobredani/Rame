@@ -19,6 +19,7 @@ class Texture
         unsigned int GetWidth() { return xWidth; }
         unsigned int GetHeight() { return xHeight; }
         void DrawOutlineRect(SDL_Rect oRect, SDL_Color oColor) {SDL_SetRenderDrawColor( oRenderer, oColor.r, oColor.g, oColor.b, oColor.a ); SDL_RenderDrawRect( oRenderer, &oRect );}
+        void DrawLine(SDL_Point ptPoint1, SDL_Point ptPoint2, SDL_Color oColor) {SDL_SetRenderDrawColor( oRenderer, oColor.r, oColor.g, oColor.b, oColor.a ); SDL_RenderDrawLine( oRenderer, ptPoint1.x,ptPoint1.y,ptPoint2.x,ptPoint1.y );}
 
     protected:
 

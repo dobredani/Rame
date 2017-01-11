@@ -32,6 +32,7 @@ struct PrecissionRect{
     };
 
 SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect);
+SDL_Point PrecissionToSDLPoint(PrecissionPoint oPrecPoint);
 
 double GetSegmentAngle(double x1, double y1, double x2, double y2);
 

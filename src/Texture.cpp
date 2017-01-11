@@ -67,7 +67,7 @@ void Texture::Render(unsigned int xLeft, unsigned int xTop, double xAngle, SDL_R
 
     if (oRenderer == NULL) return;
 
-	SDL_Rect renderQuad = { xLeft, xTop, xWidth, xHeight };
+	SDL_Rect renderQuad = { xLeft, xTop, xWidth * xZoomFactor, xHeight * xZoomFactor };
 
 	if( oSpriteRect != NULL )
 	{

@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "math.h"
 #include "stdlib.h"
+#include "SDLWindow.h"
 
 Worm::Worm()
 {
@@ -45,7 +46,8 @@ void Worm::Render()
 
     RenderWormHead();
 
-    if (DEBUG_SHOW) oTexture->DrawOutlineRect(PrecissionToSDLRect(oPreCollisionBox), oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawOutlineRect(PrecissionToSDLRect(oPreCollisionBox) , oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawLine(PrecissionToSDLPoint(ptLeftBounceCircle) , PrecissionToSDLPoint(ptRightBounceCircle), oPreCollisionBoxColor);
 
 
 }
@@ -79,7 +81,16 @@ void Worm::Move(double xSteer, long long xFrame)
 
     ptHeadPos.x = ptHeadPos.x + (xWormStretch)*cos(xDirection)/xSpeed;
     ptHeadPos.y = ptHeadPos.y + (xWormStretch)*sin(xDirection)/xSpeed;
-    xDirection += (xSteer+0.2)/xSpeed;
+
+    double xBounceAngle = BounceScreen();
+    if (xBounceAngle<0)
+        xDirection += (min(xSteer/2,0.0)+xBounceAngle)/xSpeed;
+    else
+        if (xBounceAngle>0)
+            xDirection += (max(xSteer/2,0.0)+xBounceAngle)/xSpeed;
+        else
+            xDirection += (xSteer+0.2)/xSpeed;
+
     CalculatePrecollisionBox(ptHeadPos);
 }
 
@@ -136,6 +147,90 @@ double GetSegmentAngle(double x1, double y1, double x2, double y2)
     }
 }
 
+bool intersectie(double x,double y,double raza)
+{
+    if(SCREEN_HEIGHT-y<raza||SCREEN_WIDTH-x<raza||x>raza||y<raza)
+        return true;
+    else
+        return false;
+
+}
+double minim(double x,double y)
+{
+    double a;
+    a=x;
+    if(SCREEN_HEIGHT-y<x)
+        a=SCREEN_HEIGHT-y;
+    else if(SCREEN_WIDTH-x<x)
+        a=SCREEN_WIDTH-x;
+    else if(y<x)
+        a=y;
+    return a;
+
+}
+double Worm::BounceScreen()
+{
+    //Test: Daca funtia returneaza 0
+//    return 0;
+
+    //Test: Daca funtia returneaza -
+//    return -0.5;
+
+    //Test: Daca funtia returneaza +
+//    return 0.5;
+
+    double latura;
+    double unghi;
+    double unghiFinal;
+    unghiFinal=2*(atan2((2*xBounceRadius),(xWormStretch)));
+//    unghiFinal=(unghiFinal*M_PI)/180; nu trebuie conversie in grade!
+    latura=xBounceRadius-(xBodyPartRadius/2);
+    if(xDirection>=0&&xDirection<1,57)
+    {
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin(xDirection)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y-(cos(xDirection)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin(xDirection)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y+(cos(xDirection)*latura);
+    }
+    if(xDirection>=1,57&&xDirection<3,14)
+    {
+        unghi=xDirection-1,57;
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin(unghi)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y+(cos(unghi)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin(unghi)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y-(cos(unghi)*latura);
+    }
+    if(xDirection>=3,14&&xDirection<4,71)
+    {
+        unghi=xDirection-3,14;
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin(unghi)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y-(cos(unghi)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin(unghi)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y+(cos(unghi)*latura);
+
+    }
+    if(xDirection>=4,71&&xDirection<6,28)
+    {
+        unghi=xDirection-4,71;
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin(unghi)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y+(cos(unghi)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin(unghi)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y-(cos(unghi)*latura);
+    }
+    if(intersectie(ptLeftBounceCircle.x,ptLeftBounceCircle.y,xBounceRadius)==0||
+            intersectie(ptRightBounceCircle.x,ptRightBounceCircle.y,xBounceRadius)==0)
+        return 0;
+    else if(minim(ptRightBounceCircle.x,ptRightBounceCircle.y)>
+            minim(ptLeftBounceCircle.x,ptLeftBounceCircle.y))
+        return unghiFinal;
+    else
+    {
+        unghiFinal=(-1)*unghiFinal;
+        return unghiFinal;
+    }
+
+
+}
 SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect)
 {
     SDL_Rect oSDLrect;
@@ -144,4 +239,12 @@ SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect)
     oSDLrect.w = (int)oPrecRect.w;
     oSDLrect.h = (int)oPrecRect.h;
     return oSDLrect;
+}
+
+SDL_Point PrecissionToSDLPoint(PrecissionPoint oPrecPoint)
+{
+    SDL_Point oSDLpt;
+    oSDLpt.x = (int)oPrecPoint.x;
+    oSDLpt.y = (int)oPrecPoint.y;
+    return oSDLpt;
 }

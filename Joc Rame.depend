@@ -1,13 +1,13 @@
 # depslib dependency file v1.0
-1483705605 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\game.cpp
+1484121577 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\game.cpp
 	"Game.h"
 
-1483705884 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\game.h
+1484121577 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\game.h
 	"Worm.h"
 	"SDL.h"
 	"GameMenu.h"
 
-1483704529 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\worm.h
+1484122394 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\worm.h
 	"SDL.h"
 	"Texture.h"
 	"PublicStructures.h"
@@ -331,7 +331,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1483704529 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\texture.h
+1484123541 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\texture.h
 	<string>
 	<SDL.h>
 	<SDL_image.h>
@@ -342,17 +342,17 @@
 	"begin_code.h"
 	"close_code.h"
 
-1483705991 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\gamemenu.cpp
+1484121577 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\gamemenu.cpp
 	"GameMenu.h"
 	"fstream"
 
-1483705605 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\gamemenu.h
+1484121577 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\gamemenu.h
 	<string>
 	"PublicStructures.h"
 	"Texture.h"
 	"SDLWindow.h"
 
-1483704529 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\publicstructures.h
+1484123611 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\publicstructures.h
 	<string>
 	<SDL.h>
 	"math.h"
@@ -368,17 +368,18 @@
 1483704242 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\sdlwindow.h
 	"SDL.h"
 
-1483704529 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\texture.cpp
+1484122496 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\texture.cpp
 	"Texture.h"
 	<stdio.h>
 
-1483704529 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\worm.cpp
+1484124675 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\worm.cpp
 	"Worm.h"
 	"Texture.h"
 	"math.h"
 	"stdlib.h"
+	"SDLWindow.h"
 
-1483705605 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\test.cpp
+1484123801 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\test.cpp
 	"Texture.h"
 	"Game.h"
 	"SDLWindow.h"

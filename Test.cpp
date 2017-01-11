@@ -36,7 +36,7 @@ int main( int argc, char* args[] )
         if (oGameMenu->ClickedNewGame())
         {
             oGame = NULL;
-            oGame = new Game(6);
+            oGame = new Game(2);
             oGame->SetRenderer(oRenderer);
             oGame->SpawnWorms();
             oGame->SetGameMenu(oGameMenu);

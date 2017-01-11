@@ -27,6 +27,7 @@ class Worm
         bool AddBodyParts(unsigned char xParts);
         void Render();
         void Move(double xSteer, long long xFrame);
+        double BounceScreen();
 
     protected:
 
@@ -53,7 +54,7 @@ class Worm
         SDL_Rect oHeadSprite;
         unsigned char xWormIndex;
         unsigned int xWormStretch = 24;
-        unsigned char xBounceRadius = 20;
+        unsigned char xBounceRadius = 80;
         double xBodyPartRadius = 32;
         double xZoomFactor = 0.8;
         PrecissionPoint ptLeftBounceCircle;
