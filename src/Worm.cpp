@@ -200,10 +200,10 @@ double Worm::BounceScreen()
     double unghiFinal;
     double au,bu;
     au=((xWormStretch)/(2*xBounceRadius));
-    bu=2*atan(au);
+    bu=2*(atan(au));
     unghiFinal=(bu*M_PI)/180;
     unghi=(xDirection*180)/M_PI;
-    latura=xBounceRadius-(xBodyPartRadius/2);
+    latura=xBounceRadius-xBodyPartRadius;
     if(unghi>=0&&unghi<=90)
     {
         ptLeftBounceCircle.x=abs((cos(unghi+180))*latura)+ptHeadPos.x;
@@ -239,7 +239,7 @@ double Worm::BounceScreen()
     {
         if(minim(ptRightBounceCircle.x,ptRightBounceCircle.y)>=
                 minim(ptLeftBounceCircle.x,ptLeftBounceCircle.y))
-if(unghi>=150&&unghi<=280)
+     if(unghi>=180&&unghi<=270)
              return unghiFinal;
              return unghiFinal-xDirection;
     }
