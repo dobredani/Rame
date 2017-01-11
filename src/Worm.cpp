@@ -24,7 +24,7 @@ bool Worm::AddBodyParts(unsigned char xParts)
         WormBody* pCurrentBody = lstWormBody;
         lstWormBody = new WormBody;
         lstWormBody->pNextWormBody = pCurrentBody;
-        lstWormBody->ptRenderPosition = (PrecissionPoint){ptHeadPos.x, ptHeadPos.y + (xi+1)*25}; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
+        lstWormBody->ptRenderPosition = (PrecissionPoint){ptHeadPos.x - (xi+1)*xWormStretch * cos(xDirection), ptHeadPos.y - (xi+1)*xWormStretch * sin(xDirection)}; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
 
         lstWormBody->oSpriteRect.y = 0 + TEXTURE_BORDER + xWormIndex*62;
         lstWormBody->oSpriteRect.x = 62 + TEXTURE_BORDER + (int)(xWormBodyLength*1.2)%3 * 62; // Pick one of the 3 available body sprites considering the position in the worm body
@@ -79,7 +79,7 @@ void Worm::Move(double xSteer, long long xFrame)
 
     ptHeadPos.x = ptHeadPos.x + (xWormStretch)*cos(xDirection)/xSpeed;
     ptHeadPos.y = ptHeadPos.y + (xWormStretch)*sin(xDirection)/xSpeed;
-    xDirection += (xSteer+0.2)/xSpeed;
+    xDirection += (xSteer+0.0)/xSpeed;
     CalculatePrecollisionBox(ptHeadPos);
 }
 
@@ -144,4 +144,18 @@ SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect)
     oSDLrect.w = (int)oPrecRect.w;
     oSDLrect.h = (int)oPrecRect.h;
     return oSDLrect;
+}
+
+void Worm::InitialPosition(unsigned char xWorms, unsigned char xBodyParts)
+{
+    // xWorms reprezinta numarul de rame
+    // xBodyParts este numarul de parti (cercuri) din corpul ramei
+    // xWormStretch este distanta dintre doua parti ale ramei
+    // xWormIndex este indexul ramei
+    // ptHeadPos.x si ptHeadPos.y sunt coordonatele capului ramei
+    // xDirection este directia ramei, in radiani
+    // SCREEN_WIDTH si SCREEN_HEIGHT sunt dimensiunile ecranului
+
+    // sa se calculeze coordonatele si directia ramei la inceputul jocului
+
 }

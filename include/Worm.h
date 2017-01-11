@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Texture.h"
 #include "PublicStructures.h"
+#include "SDLWindow.h"
 
 class Worm
 {
@@ -27,7 +28,7 @@ class Worm
         bool AddBodyParts(unsigned char xParts);
         void Render();
         void Move(double xSteer, long long xFrame);
-
+        void InitialPosition(unsigned char xWorms, unsigned char xBodyParts);
     protected:
 
     private:
@@ -64,6 +65,7 @@ class Worm
         void CalculateDirectionPosition(WormBody *pBodyPart, PrecissionPoint ptHeadPos);
         void ResetPreCollisionBox() {oPreCollisionBox.x = 0; oPreCollisionBox.y = 0; oPreCollisionBox.w = 0; oPreCollisionBox.h = 0;}
         void CalculatePrecollisionBox(PrecissionPoint ptNewPoint);
+
 };
 
 #endif // WORM_H
