@@ -1,6 +1,5 @@
 #ifndef WORM_H
 #define WORM_H
-#include "SDL.h"
 #include "Texture.h"
 #include "PublicStructures.h"
 
@@ -27,6 +26,7 @@ class Worm
         bool AddBodyParts(unsigned char xParts);
         void Render();
         void Move(double xSteer, long long xFrame);
+        double BounceScreen();
 
     protected:
 

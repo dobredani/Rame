@@ -24,7 +24,10 @@ bool Worm::AddBodyParts(unsigned char xParts)
         WormBody* pCurrentBody = lstWormBody;
         lstWormBody = new WormBody;
         lstWormBody->pNextWormBody = pCurrentBody;
-        lstWormBody->ptRenderPosition = (PrecissionPoint){ptHeadPos.x, ptHeadPos.y + (xi+1)*25}; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
+        lstWormBody->ptRenderPosition = (PrecissionPoint)
+        {
+            ptHeadPos.x, ptHeadPos.y + (xi+1)*25
+        }; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
 
         lstWormBody->oSpriteRect.y = 0 + TEXTURE_BORDER + xWormIndex*62;
         lstWormBody->oSpriteRect.x = 62 + TEXTURE_BORDER + (int)(xWormBodyLength*1.2)%3 * 62; // Pick one of the 3 available body sprites considering the position in the worm body
@@ -64,15 +67,15 @@ void Worm::Move(double xSteer, long long xFrame)
     while (pBodyPart != NULL)
     {
         if (pBodyPart->pNextWormBody != NULL)
-            {
-                CalculateDirectionPosition(pBodyPart);
-                CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
-            }
+        {
+            CalculateDirectionPosition(pBodyPart);
+            CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
+        }
         else
-            {
-                CalculateDirectionPosition(pBodyPart, ptHeadPos);
-                CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
-            }
+        {
+            CalculateDirectionPosition(pBodyPart, ptHeadPos);
+            CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
+        }
 
         pBodyPart = pBodyPart->pNextWormBody;
     }
@@ -112,10 +115,24 @@ void Worm::CalculatePrecollisionBox(PrecissionPoint ptPoint)
     }
     else
     {
-        if (ptPoint.x < oPreCollisionBox.x) {oPreCollisionBox.w += oPreCollisionBox.x - (ptPoint.x ); oPreCollisionBox.x = ptPoint.x ;}
-        if (ptPoint.y < oPreCollisionBox.y) {oPreCollisionBox.h += oPreCollisionBox.y - (ptPoint.y ); oPreCollisionBox.y = ptPoint.y ;}
-        if (ptPoint.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.x + oPreCollisionBox.w) {oPreCollisionBox.w = ptPoint.x - oPreCollisionBox.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;}
-        if (ptPoint.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.y + oPreCollisionBox.h) {oPreCollisionBox.h = ptPoint.y - oPreCollisionBox.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;}
+        if (ptPoint.x < oPreCollisionBox.x)
+        {
+            oPreCollisionBox.w += oPreCollisionBox.x - (ptPoint.x );
+            oPreCollisionBox.x = ptPoint.x ;
+        }
+        if (ptPoint.y < oPreCollisionBox.y)
+        {
+            oPreCollisionBox.h += oPreCollisionBox.y - (ptPoint.y );
+            oPreCollisionBox.y = ptPoint.y ;
+        }
+        if (ptPoint.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.x + oPreCollisionBox.w)
+        {
+            oPreCollisionBox.w = ptPoint.x - oPreCollisionBox.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;
+        }
+        if (ptPoint.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.y + oPreCollisionBox.h)
+        {
+            oPreCollisionBox.h = ptPoint.y - oPreCollisionBox.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;
+        }
     }
 }
 
@@ -134,6 +151,81 @@ double GetSegmentAngle(double x1, double y1, double x2, double y2)
         else
             return 2*M_PI + xAngle;
     }
+}
+bool intersectie(double x,double y,double raza)
+{
+    if(SCREEN_HEIGHT-y<raza||SCREEN_WIDTH-x<raza||x>raza||y<raza)
+        return true;
+    else
+        return false;
+
+}
+double minim(double x,double y)
+{
+    double a;
+    a=x;
+    if(SCREEN_HEIGHT-y<x)
+        a=SCREEN_HEIGHT-y;
+    else if(SCREEN_WIDTH-x<x)
+        a=SCREEN_WIDTH-x;
+    else if(y<x)
+        a=y;
+    return a;
+
+}
+double Worm::BounceScreen()
+{
+    double latura;
+    double unghi;
+    double unghiFinal;
+    unghiFinal=2*(atan2((xWormStretch)/(2*xBounceRadius)));
+    unghiFinal=(unghiFinal*M_PI)/180;
+    latura=xBounceRadius-(xBodyPartRadius/2);
+    if(xDirection>=0&&xDirection<1,57)
+    {
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin2(xDirection)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y-(cos2(xDirection)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin2(xDirection)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y+(cos2(xDirection)*latura);
+    }
+    if(xDirection>=1,57&&xDirection<3,14)
+    {
+        unghi=xDirection-1,57;
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin2(unghi)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y+(cos2(unghi)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin2(unghi)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y-(cos2(unghi)*latura);
+    }
+    if(xDirection>=3,14&&xDirection<4,71)
+    {
+        unghi=xDirection-3,14;
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin2(unghi)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y-(cos2(unghi)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin2(unghi)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y+(cos2(unghi)*latura);
+
+    }
+    if(xDirection>=4,71&&xDirection<6,28)
+    {
+        unghi=xDirection-4,71;
+        ptLeftBounceCircle.x=ptHeadPos.x-(sin2(unghi)*latura);
+        ptLeftBounceCircle.y=ptHeadPos.y+(cos2(unghi)*latura);
+        ptRightBounceCircle.x=ptHeadPos.x+(sin2(unghi)*latura);
+        ptRightBounceCircle.y=ptHeadPos.y-(cos2(unghi)*latura);
+    }
+    if(intersectie(ptLeftBounceCircle.x,ptLeftBounceCircle.y,xBounceRadius)==0||
+            intersectie(ptRightBounceCircle.x,ptRightBounceCircle.y,xBounceRadius)==0)
+        return 0;
+    else if(minim(ptRightBounceCircle.x,ptRightBounceCircle.y)>
+            minim(ptLeftBounceCircle.x,ptLeftBounceCircle,y))
+        return unghiFinal;
+    else
+    {
+        unghiFinal=(-1)*unghiFinal;
+        return unghiFinal;
+    }
+
+
 }
 
 SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect)
