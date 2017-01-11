@@ -25,7 +25,10 @@ bool Worm::AddBodyParts(unsigned char xParts)
         WormBody* pCurrentBody = lstWormBody;
         lstWormBody = new WormBody;
         lstWormBody->pNextWormBody = pCurrentBody;
-        lstWormBody->ptRenderPosition = (PrecissionPoint){ptHeadPos.x, ptHeadPos.y + (xi+1)*25}; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
+        lstWormBody->ptRenderPosition = (PrecissionPoint)
+        {
+            ptHeadPos.x, ptHeadPos.y + (xi+1)*25
+        }; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
 
         lstWormBody->oSpriteRect.y = 0 + TEXTURE_BORDER + xWormIndex*62;
         lstWormBody->oSpriteRect.x = 62 + TEXTURE_BORDER + (int)(xWormBodyLength*1.2)%3 * 62; // Pick one of the 3 available body sprites considering the position in the worm body
@@ -46,8 +49,8 @@ void Worm::Render()
 
     RenderWormHead();
 
-    if (DEBUG_SHOW) oTexture->DrawOutlineRect(PrecissionToSDLRect(oPreCollisionBox) , oPreCollisionBoxColor);
-    if (DEBUG_SHOW) oTexture->DrawLine(PrecissionToSDLPoint(ptLeftBounceCircle) , PrecissionToSDLPoint(ptRightBounceCircle), oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawOutlineRect(PrecissionToSDLRect(oPreCollisionBox), oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawLine(PrecissionToSDLPoint(ptLeftBounceCircle), PrecissionToSDLPoint(ptRightBounceCircle), oPreCollisionBoxColor);
 
 
 }
@@ -66,15 +69,15 @@ void Worm::Move(double xSteer, long long xFrame)
     while (pBodyPart != NULL)
     {
         if (pBodyPart->pNextWormBody != NULL)
-            {
-                CalculateDirectionPosition(pBodyPart);
-                CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
-            }
+        {
+            CalculateDirectionPosition(pBodyPart);
+            CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
+        }
         else
-            {
-                CalculateDirectionPosition(pBodyPart, ptHeadPos);
-                CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
-            }
+        {
+            CalculateDirectionPosition(pBodyPart, ptHeadPos);
+            CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
+        }
 
         pBodyPart = pBodyPart->pNextWormBody;
     }
@@ -85,11 +88,10 @@ void Worm::Move(double xSteer, long long xFrame)
     double xBounceAngle = BounceScreen();
     if (xBounceAngle<0)
         xDirection += (min(xSteer/2,0.0)+xBounceAngle)/xSpeed;
+    else if (xBounceAngle>0)
+        xDirection += (max(xSteer/2,0.0)+xBounceAngle)/xSpeed;
     else
-        if (xBounceAngle>0)
-            xDirection += (max(xSteer/2,0.0)+xBounceAngle)/xSpeed;
-        else
-            xDirection += (xSteer+0.2)/xSpeed;
+        xDirection += (xSteer+0.2)/xSpeed;
 
     CalculatePrecollisionBox(ptHeadPos);
 }
@@ -123,10 +125,24 @@ void Worm::CalculatePrecollisionBox(PrecissionPoint ptPoint)
     }
     else
     {
-        if (ptPoint.x < oPreCollisionBox.x) {oPreCollisionBox.w += oPreCollisionBox.x - (ptPoint.x ); oPreCollisionBox.x = ptPoint.x ;}
-        if (ptPoint.y < oPreCollisionBox.y) {oPreCollisionBox.h += oPreCollisionBox.y - (ptPoint.y ); oPreCollisionBox.y = ptPoint.y ;}
-        if (ptPoint.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.x + oPreCollisionBox.w) {oPreCollisionBox.w = ptPoint.x - oPreCollisionBox.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;}
-        if (ptPoint.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.y + oPreCollisionBox.h) {oPreCollisionBox.h = ptPoint.y - oPreCollisionBox.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;}
+        if (ptPoint.x < oPreCollisionBox.x)
+        {
+            oPreCollisionBox.w += oPreCollisionBox.x - (ptPoint.x );
+            oPreCollisionBox.x = ptPoint.x ;
+        }
+        if (ptPoint.y < oPreCollisionBox.y)
+        {
+            oPreCollisionBox.h += oPreCollisionBox.y - (ptPoint.y );
+            oPreCollisionBox.y = ptPoint.y ;
+        }
+        if (ptPoint.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.x + oPreCollisionBox.w)
+        {
+            oPreCollisionBox.w = ptPoint.x - oPreCollisionBox.x + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;
+        }
+        if (ptPoint.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor > oPreCollisionBox.y + oPreCollisionBox.h)
+        {
+            oPreCollisionBox.h = ptPoint.y - oPreCollisionBox.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;
+        }
     }
 }
 
@@ -149,7 +165,7 @@ double GetSegmentAngle(double x1, double y1, double x2, double y2)
 
 bool intersectie(double x,double y,double raza)
 {
-    if(SCREEN_HEIGHT-y<raza||SCREEN_WIDTH-x<raza||x>raza||y<raza)
+    if((SCREEN_HEIGHT-y)<=raza||(SCREEN_WIDTH-x)<=raza||x<=raza||y<=raza)
         return true;
     else
         return false;
@@ -159,9 +175,9 @@ double minim(double x,double y)
 {
     double a;
     a=x;
-    if(SCREEN_HEIGHT-y<x)
+    if((SCREEN_HEIGHT-y)<x)
         a=SCREEN_HEIGHT-y;
-    else if(SCREEN_WIDTH-x<x)
+    else if((SCREEN_WIDTH-x)<x)
         a=SCREEN_WIDTH-x;
     else if(y<x)
         a=y;
@@ -182,53 +198,52 @@ double Worm::BounceScreen()
     double latura;
     double unghi;
     double unghiFinal;
-    unghiFinal=2*(atan2((2*xBounceRadius),(xWormStretch)));
-//    unghiFinal=(unghiFinal*M_PI)/180; nu trebuie conversie in grade!
+    double au,bu;
+    au=((xWormStretch)/(2*xBounceRadius));
+    bu=2*atan(au);
+    unghiFinal=(bu*M_PI)/180;
+    unghi=(xDirection*180)/M_PI;
     latura=xBounceRadius-(xBodyPartRadius/2);
-    if(xDirection>=0&&xDirection<1,57)
+    if(unghi>=0&&unghi<=90)
     {
-        ptLeftBounceCircle.x=ptHeadPos.x-(sin(xDirection)*latura);
-        ptLeftBounceCircle.y=ptHeadPos.y-(cos(xDirection)*latura);
-        ptRightBounceCircle.x=ptHeadPos.x+(sin(xDirection)*latura);
-        ptRightBounceCircle.y=ptHeadPos.y+(cos(xDirection)*latura);
+        ptLeftBounceCircle.x=abs((cos(unghi+180))*latura)+ptHeadPos.x;
+        ptLeftBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
+        ptRightBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+        ptRightBounceCircle.y=abs((sin(unghi+180))*latura)+ptHeadPos.y;
     }
-    if(xDirection>=1,57&&xDirection<3,14)
+    if((unghi>90&&unghi<180))
     {
-        unghi=xDirection-1,57;
-        ptLeftBounceCircle.x=ptHeadPos.x-(sin(unghi)*latura);
-        ptLeftBounceCircle.y=ptHeadPos.y+(cos(unghi)*latura);
-        ptRightBounceCircle.x=ptHeadPos.x+(sin(unghi)*latura);
-        ptRightBounceCircle.y=ptHeadPos.y-(cos(unghi)*latura);
+        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+        ptLeftBounceCircle.y=abs((sin(unghi+180))*latura)+ptHeadPos.y;
+        ptRightBounceCircle.x=abs((cos(unghi+180))*latura)+ptHeadPos.x;
+        ptRightBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
     }
-    if(xDirection>=3,14&&xDirection<4,71)
+    if(unghi>=180&&unghi<=270)
     {
-        unghi=xDirection-3,14;
-        ptLeftBounceCircle.x=ptHeadPos.x-(sin(unghi)*latura);
-        ptLeftBounceCircle.y=ptHeadPos.y-(cos(unghi)*latura);
-        ptRightBounceCircle.x=ptHeadPos.x+(sin(unghi)*latura);
-        ptRightBounceCircle.y=ptHeadPos.y+(cos(unghi)*latura);
+        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+        ptLeftBounceCircle.y=abs((sin(unghi-180))*latura)+ptHeadPos.y;
+        ptRightBounceCircle.x=abs((cos(unghi-180))*latura)+ptHeadPos.x;
+        ptRightBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
 
     }
-    if(xDirection>=4,71&&xDirection<6,28)
+    if(unghi>270&&unghi<360)
     {
-        unghi=xDirection-4,71;
-        ptLeftBounceCircle.x=ptHeadPos.x-(sin(unghi)*latura);
-        ptLeftBounceCircle.y=ptHeadPos.y+(cos(unghi)*latura);
-        ptRightBounceCircle.x=ptHeadPos.x+(sin(unghi)*latura);
-        ptRightBounceCircle.y=ptHeadPos.y-(cos(unghi)*latura);
-    }
-    if(intersectie(ptLeftBounceCircle.x,ptLeftBounceCircle.y,xBounceRadius)==0||
-            intersectie(ptRightBounceCircle.x,ptRightBounceCircle.y,xBounceRadius)==0)
-        return 0;
-    else if(minim(ptRightBounceCircle.x,ptRightBounceCircle.y)>
-            minim(ptLeftBounceCircle.x,ptLeftBounceCircle.y))
-        return unghiFinal;
-    else
-    {
-        unghiFinal=(-1)*unghiFinal;
-        return unghiFinal;
-    }
+        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+        ptLeftBounceCircle.y=abs((sin(unghi-180))*latura)+ptHeadPos.y;
+        ptRightBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+        ptRightBounceCircle.y=abs((sin(unghi-180))*latura)+ptHeadPos.y;
 
+    }
+    if(intersectie(ptLeftBounceCircle.x,ptLeftBounceCircle.y,latura)==1&&
+            intersectie(ptRightBounceCircle.x,ptRightBounceCircle.y,latura)==1)
+    {
+        if(minim(ptRightBounceCircle.x,ptRightBounceCircle.y)>=
+                minim(ptLeftBounceCircle.x,ptLeftBounceCircle.y))
+if(unghi>=150&&unghi<=280)
+             return unghiFinal;
+             return unghiFinal-xDirection;
+    }
+return 0.0;
 
 }
 SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect)
