@@ -51,6 +51,8 @@ void Worm::Render()
 
     if (DEBUG_SHOW) oTexture->DrawOutlineRect(PrecissionToSDLRect(oPreCollisionBox), oPreCollisionBoxColor);
     if (DEBUG_SHOW) oTexture->DrawLine(PrecissionToSDLPoint(ptLeftBounceCircle), PrecissionToSDLPoint(ptRightBounceCircle), oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawCircle(PrecissionToSDLPoint(ptLeftBounceCircle), xBounceRadius, oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawCircle(PrecissionToSDLPoint(ptRightBounceCircle), xBounceRadius, oPreCollisionBoxColor);
 
 
 }
@@ -91,7 +93,7 @@ void Worm::Move(double xSteer, long long xFrame)
     else if (xBounceAngle>0)
         xDirection += (max(xSteer/2,0.0)+xBounceAngle)/xSpeed;
     else
-        xDirection += (xSteer+0.2)/xSpeed;
+        xDirection += (xSteer+0.0)/xSpeed;
 
     CalculatePrecollisionBox(ptHeadPos);
 }
@@ -175,73 +177,76 @@ double minim(double x,double y)
 {
     double a;
     a=x;
-    if((SCREEN_HEIGHT-y)<x)
+    if((SCREEN_HEIGHT-y)<a)
         a=SCREEN_HEIGHT-y;
-    else if((SCREEN_WIDTH-x)<x)
+    if((SCREEN_WIDTH-x)<a)
         a=SCREEN_WIDTH-x;
-    else if(y<x)
+    if(y<a)
         a=y;
     return a;
 
 }
 double Worm::BounceScreen()
 {
-    //Test: Daca funtia returneaza 0
-//    return 0;
-
-    //Test: Daca funtia returneaza -
-//    return -0.5;
-
-    //Test: Daca funtia returneaza +
-//    return 0.5;
 
     double latura;
     double unghi;
     double unghiFinal;
     double au,bu;
-    au=((xWormStretch)/(2*xBounceRadius));
-    bu=2*(atan(au));
-    unghiFinal=(bu*M_PI)/180;
-    unghi=(xDirection*180)/M_PI;
-    latura=xBounceRadius-xBodyPartRadius;
-    if(unghi>=0&&unghi<=90)
-    {
-        ptLeftBounceCircle.x=abs((cos(unghi+180))*latura)+ptHeadPos.x;
-        ptLeftBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
-        ptRightBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
-        ptRightBounceCircle.y=abs((sin(unghi+180))*latura)+ptHeadPos.y;
-    }
-    if((unghi>90&&unghi<180))
-    {
-        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
-        ptLeftBounceCircle.y=abs((sin(unghi+180))*latura)+ptHeadPos.y;
-        ptRightBounceCircle.x=abs((cos(unghi+180))*latura)+ptHeadPos.x;
-        ptRightBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
-    }
-    if(unghi>=180&&unghi<=270)
-    {
-        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
-        ptLeftBounceCircle.y=abs((sin(unghi-180))*latura)+ptHeadPos.y;
-        ptRightBounceCircle.x=abs((cos(unghi-180))*latura)+ptHeadPos.x;
-        ptRightBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
+    au=(((double)xWormStretch)/(2*(double)xBounceRadius));
+//    bu=2*(atan(au));
+    unghiFinal = 2*asin(au);
+//    unghiFinal=(bu*M_PI)/180;
+    unghi=xDirection; //(xDirection*180)/M_PI;
+    latura=xBounceRadius-xBodyPartRadius*xZoomFactor;
 
-    }
-    if(unghi>270&&unghi<360)
-    {
-        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
-        ptLeftBounceCircle.y=abs((sin(unghi-180))*latura)+ptHeadPos.y;
-        ptRightBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
-        ptRightBounceCircle.y=abs((sin(unghi-180))*latura)+ptHeadPos.y;
 
-    }
-    if(intersectie(ptLeftBounceCircle.x,ptLeftBounceCircle.y,latura)==1&&
-            intersectie(ptRightBounceCircle.x,ptRightBounceCircle.y,latura)==1)
+    ptLeftBounceCircle.x = ptHeadPos.x + xBodyPartRadius*xZoomFactor +cos(xDirection + 3*M_PI/2) * latura;
+    ptLeftBounceCircle.y = ptHeadPos.y + xBodyPartRadius*xZoomFactor +sin(xDirection + 3*M_PI/2) * latura;
+    ptRightBounceCircle.x = ptHeadPos.x + xBodyPartRadius*xZoomFactor +cos(xDirection + M_PI/2) * latura;
+    ptRightBounceCircle.y = ptHeadPos.y + xBodyPartRadius*xZoomFactor +sin(xDirection + M_PI/2) * latura;
+
+
+//    if(unghi>=0&&unghi<=M_PI/2)
+//    {
+//        ptLeftBounceCircle.x=abs((cos(unghi+M_PI))*latura)+ptHeadPos.x;
+//        ptLeftBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
+//        ptRightBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+//        ptRightBounceCircle.y=abs((sin(unghi+M_PI))*latura)+ptHeadPos.y;
+//    }
+//    if((unghi>M_PI/2&&unghi<M_PI))
+//    {
+//        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+//        ptLeftBounceCircle.y=abs((sin(unghi+M_PI))*latura)+ptHeadPos.y;
+//        ptRightBounceCircle.x=abs((cos(unghi+M_PI))*latura)+ptHeadPos.x;
+//        ptRightBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
+//    }
+//    if(unghi>=M_PI&&unghi<=3*M_PI/2)
+//    {
+//        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+//        ptLeftBounceCircle.y=abs((sin(unghi-M_PI))*latura)+ptHeadPos.y;
+//        ptRightBounceCircle.x=abs((cos(unghi-M_PI))*latura)+ptHeadPos.x;
+//        ptRightBounceCircle.y=abs((sin(unghi))*latura)+ptHeadPos.y;
+//
+//    }
+//    if(unghi>3*M_PI/2&&unghi<2*M_PI)
+//    {
+//        ptLeftBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+//        ptLeftBounceCircle.y=abs((sin(unghi-M_PI))*latura)+ptHeadPos.y;
+//        ptRightBounceCircle.x=abs((cos(unghi))*latura)+ptHeadPos.x;
+//        ptRightBounceCircle.y=abs((sin(unghi-M_PI))*latura)+ptHeadPos.y;
+//
+//    }
+
+    if(intersectie(ptLeftBounceCircle.x,ptLeftBounceCircle.y,xBounceRadius)==1&&
+            intersectie(ptRightBounceCircle.x,ptRightBounceCircle.y,xBounceRadius)==1)
     {
         if(minim(ptRightBounceCircle.x,ptRightBounceCircle.y)>=
                 minim(ptLeftBounceCircle.x,ptLeftBounceCircle.y))
-     if(unghi>=180&&unghi<=270)
+//     if(unghi>=180&&unghi<=270)
              return unghiFinal;
-             return unghiFinal-xDirection;
+        else
+             return -unghiFinal;
     }
 return 0.0;
 
