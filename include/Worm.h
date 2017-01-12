@@ -4,6 +4,7 @@
 #include "Texture.h"
 #include "PublicStructures.h"
 #include "SDLWindow.h"
+#include "GameObject.h"
 
 class Worm
 {
@@ -11,7 +12,7 @@ class Worm
         Worm();
         virtual ~Worm();
 
-        const unsigned char TEXTURE_BORDER = 8;
+//        const unsigned char TEXTURE_BORDER = 8;
 
         void SetDirection(double val) { xDirection = val; }
         void SetSpeed(unsigned char val) { xSpeed = 5+(255-val)/12; }
@@ -19,7 +20,7 @@ class Worm
         void SetTexture(Texture *oValue) { oTexture = oValue; }
         void SetWormIndex(unsigned char xValue) { xWormIndex = xValue; oHeadSprite = {0 + TEXTURE_BORDER,0 + TEXTURE_BORDER + xValue * 62,63 - TEXTURE_BORDER * 2,63 - TEXTURE_BORDER * 2};}
         void SetPreCollisionBoxColor(SDL_Color oValue) { oPreCollisionBoxColor.r = oValue.r; oPreCollisionBoxColor.g = oValue.g; oPreCollisionBoxColor.b = oValue.b; oPreCollisionBoxColor.a = oValue.a;}
-        void SetInPreCollision(bool bValue) {bInPreCollision = bValue;}
+        void SetInPreCollision(bool bValue) {bInPreCollision = bValue; if (!bInPreCollision) {lstCollidingWorms = NULL; lstCollidingObjects = NULL;} }
         bool GetInPreCollision() {return bInPreCollision;}
         PrecissionRect GetPreCollisionBox() { return oPreCollisionBox; }
         unsigned short GetWormBodyLength() { return xWormBodyLength; }
@@ -30,6 +31,7 @@ class Worm
         void Move(double xSteer, long long xFrame);
         double BounceScreen();
         void InitialPosition(unsigned char xWorms, unsigned char xBodyParts);
+        PrecissionPoint ClosestBodyPart(PrecissionPoint ptPoint);
     protected:
 
     private:
@@ -41,9 +43,21 @@ class Worm
             WormBody *pNextWormBody;
         };
 
+        struct CollidingWorms{
+            Worm *CollidingWorm;
+            CollidingWorms* pNext;
+        };
+
+        struct CollidingObjects{
+            GameObject *oCollidingObject;
+            CollidingObjects* pNext;
+        };
+
         double xDirection;
         unsigned char xSpeed;
         WormBody *lstWormBody = NULL;
+        CollidingWorms *lstCollidingWorms=NULL;
+        CollidingObjects *lstCollidingObjects=NULL;
 
         bool bInPreCollision = false;
         SDL_Color oPreCollisionBoxColor;

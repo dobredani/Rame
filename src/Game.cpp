@@ -1,4 +1,6 @@
 #include "Game.h"
+#include "GameObject.h"
+#include "math.h"
 
 Game::Game(unsigned char xPlayersCount)
 {
@@ -20,13 +22,21 @@ void Game::SpawnWorms()
             arrWorms[xi] = NULL;
 }
 
+void Game::SpawnGameObjects()
+{
+
+    if (xFoodObjects<3) SpawnNewFood(++xFoodObjects);
+    if (xCritterObjects<2) SpawnNewCritter(++xCritterObjects);
+
+}
+
 Worm* Game::SpawnNewWorm(unsigned char xWorm)
 {
     Worm * oWorm = new Worm;
     oWorm->SetWormIndex(xWorm);
     oWorm->SetDirection(5.2);
     oWorm->SetHeadPos((PrecissionPoint){50 + xWorm*60,100});
-    oWorm->SetSpeed(80);
+    oWorm->SetSpeed(50);
     oWorm->InitialPosition(xPlayers,12);
     oWorm->AddBodyParts(12);
 
@@ -35,6 +45,61 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
 
     oWorm->SetTexture(oTexture);
     return oWorm;
+}
+
+GameObject* Game::SpawnNewFood(unsigned char xGobject)
+{
+    GameObject * oGameObject = new GameObject;
+    oGameObject->SetIndex(xGobject);
+    oGameObject->SetPosition((PrecissionPoint){50 + xGobject*60,100});
+    oGameObject->SetDoesDamage(false);
+    oGameObject->SetDoesFeed(true);
+
+    Texture *oTexture = new Texture(oRenderer);
+    oTexture->LoadImage("Images/Object Sprites.png");
+
+    oGameObject->SetTexture(oTexture);
+
+    oGameObject->oSpriteRect.y = 0 + TEXTURE_BORDER;
+    oGameObject->oSpriteRect.x = TEXTURE_BORDER + (int)(xGobject*1.2)%4 * 62;
+    oGameObject->oSpriteRect.h = 63 - TEXTURE_BORDER * 2;
+    oGameObject->oSpriteRect.w = 63 - TEXTURE_BORDER * 2;
+
+    GameObjects *pFoodObject = lstFoodObjects;
+
+    lstFoodObjects = new GameObjects;
+    lstFoodObjects->oGameObject = oGameObject;
+    lstFoodObjects->pNext=pFoodObject;
+
+    return oGameObject;
+}
+
+GameObject* Game::SpawnNewCritter(unsigned char xGobject)
+{
+    GameObject * oGameObject = new GameObject;
+    oGameObject->SetIndex(xGobject);
+    oGameObject->SetPosition((PrecissionPoint){50 + xGobject*60,200});
+    oGameObject->SetDoesDamage(true);
+    oGameObject->SetDoesFeed(false);
+    oGameObject->SetSpeed(25);
+
+    Texture *oTexture = new Texture(oRenderer);
+    oTexture->LoadImage("Images/Object Sprites.png");
+
+    oGameObject->SetTexture(oTexture);
+
+    oGameObject->oSpriteRect.y = 0 + TEXTURE_BORDER + 62;
+    oGameObject->oSpriteRect.x = TEXTURE_BORDER + (int)(xGobject*1.2)%4 * 62;
+    oGameObject->oSpriteRect.h = 63 - TEXTURE_BORDER * 2;
+    oGameObject->oSpriteRect.w = 63 - TEXTURE_BORDER * 2;
+
+    GameObjects *pCritterObject = lstCritterObjects;
+
+    lstCritterObjects = new GameObjects;
+    lstCritterObjects->oGameObject = oGameObject;
+    lstCritterObjects->pNext=pCritterObject;
+
+    return oGameObject;
 }
 
 double Game::SteerWorm(Player* oPlayer)
@@ -61,6 +126,24 @@ void Game::RenderWorms()
 {
     for (unsigned char xi = 0; xi<xPlayers; xi++)
         arrWorms[xi]->Render();
+}
+
+void Game::RenderGameObjects()
+{
+    GameObjects *pFoodObject = lstFoodObjects;
+    while (pFoodObject!=NULL)
+    {
+        pFoodObject->oGameObject->Render();
+        pFoodObject = pFoodObject->pNext;
+    }
+
+    GameObjects *pCritterObject = lstCritterObjects;
+    while (pCritterObject!=NULL)
+    {
+        pCritterObject->oGameObject->Render();
+        pCritterObject = pCritterObject->pNext;
+    }
+
 }
 
 bool Game::CheckPrecollision(Worm *oWorm1, Worm *oWorm2)
@@ -90,4 +173,35 @@ void Game::PreCollision()
                 arrWorms[yi]->SetInPreCollision(true);
             }
     }
+}
+
+void Game::MoveCritters()
+{
+    GameObjects *pCritter = lstCritterObjects;
+    double xShortestDistance = SCREEN_WIDTH*2;
+    double xDistance;
+    double xAngle=2;
+    double xSpeed;
+
+    while(pCritter!=NULL)
+    {
+        for (unsigned int xi = 0; xi<xPlayers; xi++)
+            if (arrWorms[xi]!=NULL)
+            {
+                PrecissionPoint ptClosest = arrWorms[xi]->ClosestBodyPart(pCritter->oGameObject->ptPosition);
+                xDistance = DistanceBetweenPoints(ptClosest,pCritter->oGameObject->ptPosition);
+
+                if (xDistance<xShortestDistance)
+                    {
+                        xAngle = GetSegmentAngle(pCritter->oGameObject->ptPosition.x,pCritter->oGameObject->ptPosition.y,ptClosest.x,ptClosest.y);
+                        pCritter->oGameObject->SetDirection(xAngle);
+                    }
+            }
+        xSpeed = pCritter->oGameObject->GetSpeed();
+
+        pCritter->oGameObject->ptPosition.x = pCritter->oGameObject->ptPosition.x + (10)*cos(xAngle)/xSpeed;
+        pCritter->oGameObject->ptPosition.y = pCritter->oGameObject->ptPosition.y + (10)*sin(xAngle)/xSpeed;
+        pCritter = pCritter->pNext;
+    }
+
 }

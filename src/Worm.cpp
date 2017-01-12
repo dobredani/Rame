@@ -10,6 +10,8 @@ Worm::Worm()
     oPreCollisionBoxColor.g = 0xFF;
     oPreCollisionBoxColor.b = 0x00;
     oPreCollisionBoxColor.a = 0xFF;
+
+
 }
 
 Worm::~Worm()
@@ -146,6 +148,11 @@ void Worm::CalculatePrecollisionBox(PrecissionPoint ptPoint)
             oPreCollisionBox.h = ptPoint.y - oPreCollisionBox.y + 2*(xBodyPartRadius - TEXTURE_BORDER)*xZoomFactor;
         }
     }
+}
+
+double DistanceBetweenPoints(PrecissionPoint ptPoint1,PrecissionPoint ptPoint2)
+{
+    return sqrt(pow(ptPoint1.x-ptPoint2.x,2) + pow(ptPoint1.y-ptPoint2.y,2));
 }
 
 double GetSegmentAngle(double x1, double y1, double x2, double y2)
@@ -434,3 +441,24 @@ void Worm::InitialPosition(unsigned char xWorms, unsigned char xBodyParts)
         // sa se calculeze coordonatele si directia ramei la inceputul jocului
 
     }
+
+PrecissionPoint Worm::ClosestBodyPart(PrecissionPoint ptPoint)
+{
+    double xMinDistance = 2*SCREEN_WIDTH;
+    double xDistance;
+    PrecissionPoint ptResult = (PrecissionPoint){0,0};
+
+    WormBody *pBodyPart = lstWormBody;
+
+    while (pBodyPart!=NULL)
+    {
+        xDistance = DistanceBetweenPoints(ptPoint,pBodyPart->ptRenderPosition);
+        if( xDistance < xMinDistance )
+        {
+            xMinDistance = xDistance;
+            ptResult = pBodyPart->ptRenderPosition;
+        }
+        pBodyPart = pBodyPart->pNextWormBody;
+    }
+    return ptResult;
+}

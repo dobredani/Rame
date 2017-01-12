@@ -4,12 +4,15 @@
 #include <SDL.h>
 #include "math.h"
 
+
 #define GAME_DIFFICULTY_EASY 1;
 #define GAME_DIFFICULTY_MEDIUM 2;
 #define GAME_DIFFICULTY_HARD 3;
 const bool DEBUG_SHOW = true;
 
 using namespace std;
+
+const unsigned char TEXTURE_BORDER = 8;
 
 struct Player{
     string sName;
@@ -35,5 +38,5 @@ SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect);
 SDL_Point PrecissionToSDLPoint(PrecissionPoint oPrecPoint);
 
 double GetSegmentAngle(double x1, double y1, double x2, double y2);
-
+double DistanceBetweenPoints(PrecissionPoint ptPoint1,PrecissionPoint ptPoint2);
 #endif

@@ -33,25 +33,27 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
-			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/mingw_dev_lib/include/SDL2" />
-			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/x86_64-w64-mingw32/include/SDL2" />
-			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/i686-w64-mingw32/include/SDL2" />
+			<Add directory="Fisiere SDL/mingw_dev_lib/include/SDL2" />
+			<Add directory="Fisiere SDL/x86_64-w64-mingw32/include/SDL2" />
+			<Add directory="Fisiere SDL/i686-w64-mingw32/include/SDL2" />
 		</Compiler>
 		<Linker>
 			<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image" />
-			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/mingw_dev_lib/lib" />
-			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/x86_64-w64-mingw32/lib" />
-			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/i686-w64-mingw32/lib" />
+			<Add directory="Fisiere SDL/mingw_dev_lib/lib" />
+			<Add directory="Fisiere SDL/x86_64-w64-mingw32/lib" />
+			<Add directory="Fisiere SDL/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="Test.cpp" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameMenu.h" />
+		<Unit filename="include/GameObject.h" />
 		<Unit filename="include/PublicStructures.h" />
 		<Unit filename="include/SDLWindow.h" />
 		<Unit filename="include/Texture.h" />
 		<Unit filename="include/Worm.h" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameMenu.cpp" />
+		<Unit filename="src/GameObject.cpp" />
 		<Unit filename="src/SDLWindow.cpp" />
 		<Unit filename="src/Texture.cpp" />
 		<Unit filename="src/Worm.cpp" />

@@ -58,9 +58,12 @@ int main( int argc, char* args[] )
         }
         else
         {
+            oGame->SpawnGameObjects();
             oGame->MoveWorms();
+            oGame->MoveCritters();
             oGame->PreCollision();
             oGame->RenderWorms();
+            oGame->RenderGameObjects();
         }
 
 
