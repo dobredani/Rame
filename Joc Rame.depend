@@ -1,10 +1,11 @@
 # depslib dependency file v1.0
-1484241386 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\game.cpp
+1484249218 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\game.cpp
 	"Game.h"
 	"GameObject.h"
 	"math.h"
+	"stdio.h"
 
-1484239030 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\game.h
+1484250527 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\game.h
 	"Worm.h"
 	"SDL.h"
 	"GameMenu.h"
@@ -347,7 +348,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1484237120 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\publicstructures.h
+1484245405 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\publicstructures.h
 	<string>
 	<SDL.h>
 	"math.h"
@@ -373,26 +374,26 @@
 	<string>
 	"Texture.h"
 
-1484225708 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\texture.cpp
+1484246580 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\texture.cpp
 	"Texture.h"
 	<stdio.h>
 
-1484239477 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\worm.cpp
+1484249154 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\worm.cpp
 	"Worm.h"
 	"Texture.h"
 	"math.h"
 	"stdlib.h"
 	"SDLWindow.h"
 
-1484238335 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\test.cpp
+1484248404 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\test.cpp
 	"Texture.h"
 	"Game.h"
 	"SDLWindow.h"
 
-1484241001 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\gameobject.h
+1484250006 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\gameobject.h
 	"PublicStructures.h"
 	"Texture.h"
 
-1484239129 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\gameobject.cpp
+1484249323 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\gameobject.cpp
 	"GameObject.h"
 

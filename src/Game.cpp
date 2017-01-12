@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "math.h"
+#include "stdio.h"
 
 Game::Game(unsigned char xPlayersCount)
 {
@@ -178,30 +179,43 @@ void Game::PreCollision()
 void Game::MoveCritters()
 {
     GameObjects *pCritter = lstCritterObjects;
-    double xShortestDistance = SCREEN_WIDTH*2;
-    double xDistance;
-    double xAngle=2;
+    PrecissionPoint ptClosest;
     double xSpeed;
+    double xAngle=0.0;
 
     while(pCritter!=NULL)
     {
-        for (unsigned int xi = 0; xi<xPlayers; xi++)
-            if (arrWorms[xi]!=NULL)
-            {
-                PrecissionPoint ptClosest = arrWorms[xi]->ClosestBodyPart(pCritter->oGameObject->ptPosition);
-                xDistance = DistanceBetweenPoints(ptClosest,pCritter->oGameObject->ptPosition);
-
-                if (xDistance<xShortestDistance)
-                    {
-                        xAngle = GetSegmentAngle(pCritter->oGameObject->ptPosition.x,pCritter->oGameObject->ptPosition.y,ptClosest.x,ptClosest.y);
-                        pCritter->oGameObject->SetDirection(xAngle);
-                    }
-            }
         xSpeed = pCritter->oGameObject->GetSpeed();
 
-        pCritter->oGameObject->ptPosition.x = pCritter->oGameObject->ptPosition.x + (10)*cos(xAngle)/xSpeed;
-        pCritter->oGameObject->ptPosition.y = pCritter->oGameObject->ptPosition.y + (10)*sin(xAngle)/xSpeed;
+        xAngle = AngleTowardsWorm(pCritter->oGameObject);
+        pCritter->oGameObject->MoveOffset( 10.0*sin(xAngle)/xSpeed, 10.0*cos(xAngle)/xSpeed);
+
         pCritter = pCritter->pNext;
     }
 
+}
+
+double Game::AngleTowardsWorm(GameObject *pCritter)
+{
+    double xShortestDistance ;
+    double xDistance;
+    double xAngle=0.0;
+
+    xShortestDistance= SCREEN_WIDTH*20;
+    for (unsigned int xi = 0; xi<xPlayers; xi++)
+        if (arrWorms[xi]!=NULL)
+        {
+            PrecissionPoint ptClosest2 = arrWorms[xi]->ClosestBodyPart(pCritter->ptPosition);
+            xDistance = DistanceBetweenPoints(ptClosest2,pCritter->ptPosition);
+
+            if (xDistance<xShortestDistance)
+                {
+                    xShortestDistance = xDistance;
+                    pCritter->ptClosest.x = ptClosest2.x;
+                    pCritter->ptClosest.y = ptClosest2.y;
+                    xAngle = GetSegmentAngle(pCritter->ptPosition.x,pCritter->ptPosition.y,pCritter->ptClosest.x,pCritter->ptClosest.y);
+                    pCritter->SetDirection(xAngle);
+                }
+        }
+    return xAngle;
 }

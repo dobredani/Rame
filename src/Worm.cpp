@@ -444,7 +444,7 @@ void Worm::InitialPosition(unsigned char xWorms, unsigned char xBodyParts)
 
 PrecissionPoint Worm::ClosestBodyPart(PrecissionPoint ptPoint)
 {
-    double xMinDistance = 2*SCREEN_WIDTH;
+    double xMinDistance = 20*SCREEN_WIDTH;
     double xDistance;
     PrecissionPoint ptResult = (PrecissionPoint){0,0};
 
@@ -460,5 +460,6 @@ PrecissionPoint Worm::ClosestBodyPart(PrecissionPoint ptPoint)
         }
         pBodyPart = pBodyPart->pNextWormBody;
     }
+
     return ptResult;
 }

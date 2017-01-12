@@ -13,7 +13,7 @@ class GameObject
 
         void SetSpeed(unsigned char val) { xSpeed = 5+(255-val)/12; }
         unsigned char GetSpeed() {return xSpeed;}
-        void SetDirection(double val) { xDirection = val; }
+        void SetDirection(double val) { xDirection =(2*M_PI - val)/(2*M_PI)*360; }
         double GetDirection() { return xDirection; }
         PrecissionPoint GetPosition() { return ptPosition; }
         void SetPosition(PrecissionPoint val) { ptPosition = val; }
@@ -27,15 +27,17 @@ class GameObject
         PrecissionPoint ptPosition;
 
         void Render();
+        void MoveOffset(double xOffset, double yOffset);
+        PrecissionPoint ptClosest;
     protected:
 
     private:
         double xRadius;
+        double xDirection;
         Texture *oTexture=NULL;
         bool bDoesDamage = false;
         bool bDoesFeed = false;
         unsigned char xIndex;
-        double xDirection;
         unsigned char xSpeed;
 };
 

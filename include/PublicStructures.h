@@ -34,6 +34,8 @@ struct PrecissionRect{
     double h;
     };
 
+
+
 SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect);
 SDL_Point PrecissionToSDLPoint(PrecissionPoint oPrecPoint);
 

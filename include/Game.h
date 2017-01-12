@@ -49,6 +49,8 @@ class Game
         bool CheckPrecollision(Worm *oWorm1, Worm *oWorm2);
         unsigned char xFoodObjects = 0;
         unsigned char xCritterObjects = 0;
+
+        double AngleTowardsWorm(GameObject *pCritter);
 };
 
 #endif // GAME_H
