@@ -34,7 +34,16 @@ struct PrecissionRect{
     double h;
     };
 
+struct PushForce{
+    double xStrength;
+    double xRadius;
+    double xCurve; // coefficient in an exponential equation: used to determine force strength at a certain distance from object
+};
 
+struct PullForce{
+    double xDirection;
+    double xMagnitude;
+};
 
 SDL_Rect PrecissionToSDLRect(PrecissionRect oPrecRect);
 SDL_Point PrecissionToSDLPoint(PrecissionPoint oPrecPoint);

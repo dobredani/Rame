@@ -185,19 +185,65 @@ void Game::MoveCritters()
 
     while(pCritter!=NULL)
     {
-        xSpeed = pCritter->oGameObject->GetSpeed();
-
         xAngle = AngleTowardsWorm(pCritter->oGameObject);
-        pCritter->oGameObject->MoveOffset( 10.0*sin(xAngle)/xSpeed, 10.0*cos(xAngle)/xSpeed);
+        pCritter->oGameObject->MoveOffset(xAngle);
 
         pCritter = pCritter->pNext;
     }
 
 }
 
+void Game::ApplyForces()
+{
+    GameObjects *pCritter = lstCritterObjects;
+    PrecissionPoint ptClosest;
+    double xSpeed;
+    double xAngle=0.0;
+
+    while(pCritter!=NULL)
+    {
+        xSpeed = pCritter->oGameObject->GetSpeed();
+
+        CrittersSpreadOut(pCritter->oGameObject);
+        pCritter->oGameObject->ApplyPullForces();
+
+        pCritter = pCritter->pNext;
+    }
+
+}
+
+// Critters move away from each other
+//http://www.wolframalpha.com/input/?i=plot+0.01%5Ex
+PullForce Game::CrittersSpreadOut(GameObject *pCritter)
+{
+    double xDistance;
+    GameObjects *pOtherCritter = lstCritterObjects;
+
+    while(pOtherCritter!=NULL)
+    {
+        if (pOtherCritter->oGameObject->GetIndex() != pCritter->GetIndex())
+        {
+            xDistance = DistanceBetweenPoints(pCritter->ptPosition, pOtherCritter->oGameObject->ptPosition);
+            if (xDistance < pOtherCritter->oGameObject->GetPushForce().xRadius)
+            {
+                PullForce oPF;
+                double xPercentage;
+
+                xPercentage = xDistance/pOtherCritter->oGameObject->GetPushForce().xRadius;
+
+                oPF.xDirection = GetSegmentAngle(pOtherCritter->oGameObject->ptPosition.x, pOtherCritter->oGameObject->ptPosition.y, pCritter->ptPosition.x, pCritter->ptPosition.y);
+                oPF.xMagnitude = pOtherCritter->oGameObject->GetPushForce().xStrength * pow(pOtherCritter->oGameObject->GetPushForce().xCurve,xPercentage*4 - 2);
+
+                pCritter->CombinePullForces(oPF);
+            }
+        }
+        pOtherCritter = pOtherCritter->pNext;
+    }
+}
+
 double Game::AngleTowardsWorm(GameObject *pCritter)
 {
-    double xShortestDistance ;
+    double xShortestDistance;
     double xDistance;
     double xAngle=0.0;
 
@@ -214,7 +260,7 @@ double Game::AngleTowardsWorm(GameObject *pCritter)
                     pCritter->ptClosest.x = ptClosest2.x;
                     pCritter->ptClosest.y = ptClosest2.y;
                     xAngle = GetSegmentAngle(pCritter->ptPosition.x,pCritter->ptPosition.y,pCritter->ptClosest.x,pCritter->ptClosest.y);
-                    pCritter->SetDirection(xAngle);
+//                    pCritter->SetDirection(xAngle);
                 }
         }
     return xAngle;

@@ -29,6 +29,7 @@ class Game
 
         double SteerWorm(Player* oPlayer);
         void RenderGameObjects();
+        void ApplyForces();
     protected:
 
     private:
@@ -51,6 +52,7 @@ class Game
         unsigned char xCritterObjects = 0;
 
         double AngleTowardsWorm(GameObject *pCritter);
+        PullForce CrittersSpreadOut(GameObject *pCritter);
 };
 
 #endif // GAME_H

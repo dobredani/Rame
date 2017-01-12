@@ -10,7 +10,7 @@ class GameObject
         GameObject();
         virtual ~GameObject();
 
-
+        PushForce GetPushForce() {return oPushForce;}
         void SetSpeed(unsigned char val) { xSpeed = 5+(255-val)/12; }
         unsigned char GetSpeed() {return xSpeed;}
         void SetDirection(double val) { xDirection =(2*M_PI - val)/(2*M_PI)*360; }
@@ -18,6 +18,7 @@ class GameObject
         PrecissionPoint GetPosition() { return ptPosition; }
         void SetPosition(PrecissionPoint val) { ptPosition = val; }
         void SetIndex(unsigned char val) { xIndex = val; }
+        unsigned char GetIndex() {return xIndex;}
         void SetDoesDamage(bool val) { bDoesDamage = val; }
         void SetDoesFeed(bool val) { bDoesFeed = val; }
         double GetRadius() { return xRadius; }
@@ -25,10 +26,12 @@ class GameObject
         void SetTexture(Texture *val) { oTexture = val; }
         SDL_Rect oSpriteRect;
         PrecissionPoint ptPosition;
+        PrecissionPoint ptClosest;
 
         void Render();
-        void MoveOffset(double xOffset, double yOffset);
-        PrecissionPoint ptClosest;
+        void MoveOffset(double xDesiredAngle);
+        void CombinePullForces(PullForce oNewPullForce);
+        void ApplyPullForces();
     protected:
 
     private:
@@ -39,6 +42,9 @@ class GameObject
         bool bDoesFeed = false;
         unsigned char xIndex;
         unsigned char xSpeed;
+
+        PushForce oPushForce;
+        PullForce oPullForce;
 };
 
 #endif // GAMEOBJECT_H
