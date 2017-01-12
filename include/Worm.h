@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "Texture.h"
 #include "PublicStructures.h"
+#include "SDLWindow.h"
 
 class Worm
 {
@@ -28,7 +29,7 @@ class Worm
         void Render();
         void Move(double xSteer, long long xFrame);
         double BounceScreen();
-
+        void InitialPosition(unsigned char xWorms, unsigned char xBodyParts);
     protected:
 
     private:

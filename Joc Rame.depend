@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1484154517 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\game.cpp
+1484226895 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\game.cpp
 	"Game.h"
 
 1484121577 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\game.h
@@ -7,10 +7,11 @@
 	"SDL.h"
 	"GameMenu.h"
 
-1484159157 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\worm.h
+1484226895 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\worm.h
 	"SDL.h"
 	"Texture.h"
 	"PublicStructures.h"
+	"SDLWindow.h"
 
 1484121576 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\fisiere sdl\mingw_dev_lib\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -331,7 +332,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1484158794 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\texture.h
+1484225708 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\texture.h
 	<string>
 	<SDL.h>
 	<SDL_image.h>
@@ -343,7 +344,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1484153164 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\publicstructures.h
+1484225708 c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\include\publicstructures.h
 	<string>
 	<SDL.h>
 	"math.h"
@@ -369,18 +370,18 @@
 	<string>
 	"Texture.h"
 
-1484153164 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\texture.cpp
+1484225708 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\texture.cpp
 	"Texture.h"
 	<stdio.h>
 
-1484158993 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\worm.cpp
+1484226895 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\src\worm.cpp
 	"Worm.h"
 	"Texture.h"
 	"math.h"
 	"stdlib.h"
 	"SDLWindow.h"
 
-1484158872 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\test.cpp
+1484226955 source:c:\users\dani\dropbox\facultate\teme\proiect ip\joc rame\rame\test.cpp
 	"Texture.h"
 	"Game.h"
 	"SDLWindow.h"

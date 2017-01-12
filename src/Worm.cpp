@@ -27,7 +27,7 @@ bool Worm::AddBodyParts(unsigned char xParts)
         lstWormBody->pNextWormBody = pCurrentBody;
         lstWormBody->ptRenderPosition = (PrecissionPoint)
         {
-            ptHeadPos.x, ptHeadPos.y + (xi+1)*25
+            ptHeadPos.x - (xi+1)*xWormStretch * cos(xDirection), ptHeadPos.y - (xi+1)*xWormStretch * sin(xDirection)
         }; // <- To Do: function that calculates the position of the body part based on direction, screen constrains and distance to worm head
 
         lstWormBody->oSpriteRect.y = 0 + TEXTURE_BORDER + xWormIndex*62;
@@ -268,3 +268,169 @@ SDL_Point PrecissionToSDLPoint(PrecissionPoint oPrecPoint)
     oSDLpt.y = (int)oPrecPoint.y;
     return oSDLpt;
 }
+
+void Worm::InitialPosition(unsigned char xWorms, unsigned char xBodyParts)
+{
+    double lungime;
+    double latura,laturadoi;
+    lungime=((xBodyParts-1)*xWormStretch+(2*xBodyParts*xBodyPartRadius))/6;
+    if(xWorms==1&&xWormIndex==0)
+    {
+        latura=(SCREEN_WIDTH-lungime)/2;
+        ptHeadPos.x=SCREEN_WIDTH-latura;
+        ptHeadPos.y=SCREEN_HEIGHT/2;
+        xDirection=0.0;
+    }
+    if(xWorms==2)
+    {
+        latura=(SCREEN_HEIGHT-lungime)/2;
+        if(xWormIndex==0)
+        {
+            ptHeadPos.x=SCREEN_WIDTH-(2*(SCREEN_WIDTH/3));
+            ptHeadPos.y=latura/2;
+            xDirection=4.71;
+        }
+        else if(xWormIndex==1)
+        {
+            ptHeadPos.x=SCREEN_WIDTH-(SCREEN_WIDTH/3);
+            ptHeadPos.y=SCREEN_HEIGHT-lungime/2;
+            xDirection=1.57;
+
+        }
+
+    }
+    if(xWorms==3)
+    {
+        if(xWormIndex==0)
+        {ptHeadPos.x=SCREEN_WIDTH/4;
+        ptHeadPos.y=SCREEN_HEIGHT-SCREEN_HEIGHT/3;;
+        xDirection=2.355;
+        }
+        else if(xWormIndex==1)
+        {ptHeadPos.x=SCREEN_WIDTH-SCREEN_WIDTH/4;
+        ptHeadPos.y=SCREEN_HEIGHT-SCREEN_HEIGHT/3;
+            xDirection=0.0;
+        }
+        else if(xWormIndex==2)
+        {ptHeadPos.x=SCREEN_WIDTH/2;
+         ptHeadPos.y=SCREEN_HEIGHT/3;
+            xDirection=3.925;
+
+        }
+    }
+    else if(xWorms==4)
+    {
+        latura=(SCREEN_HEIGHT-lungime)/2;
+        laturadoi=(SCREEN_WIDTH-lungime)/2;
+        if(xWormIndex==0)
+        {
+            ptHeadPos.x=(laturadoi)/3;
+            ptHeadPos.y=latura/2;
+            xDirection=4.71;
+        }
+        else if(xWormIndex==1)
+        {
+            ptHeadPos.x=(SCREEN_WIDTH-laturadoi);
+            ptHeadPos.y=latura/2;
+            xDirection=0.0;
+        }
+        else if(xWormIndex==2)
+        {
+            ptHeadPos.x=(SCREEN_WIDTH-(laturadoi/2));
+            ptHeadPos.y=SCREEN_HEIGHT-(latura/3);
+            xDirection=1.57;
+        }
+        else if(xWormIndex==3)
+        {
+            ptHeadPos.x=laturadoi/3;
+            ptHeadPos.y=(SCREEN_HEIGHT-latura);
+            xDirection=3.14;
+        }
+    }
+        else if(xWorms==5)
+        {
+            latura=(SCREEN_WIDTH-lungime)/2;
+            if(xWormIndex==0)
+            {
+                ptHeadPos.x=SCREEN_WIDTH-latura;
+                ptHeadPos.y=SCREEN_HEIGHT/6;
+                xDirection=0.0;
+            }
+            else if(xWormIndex==1)
+            {
+                ptHeadPos.x=latura;
+                ptHeadPos.y=SCREEN_HEIGHT/3;
+                xDirection=3.14;
+            }
+            else if(xWormIndex==2)
+            {
+                ptHeadPos.x=SCREEN_WIDTH-latura;
+                ptHeadPos.y=SCREEN_HEIGHT/2;
+                xDirection=0.0;
+            }
+            if(xWormIndex==3)
+            {
+                ptHeadPos.x=latura;
+                ptHeadPos.y=2*(SCREEN_HEIGHT/3);
+                xDirection=3.14;
+
+            }
+            if(xWormIndex==4)
+            {
+                ptHeadPos.x=SCREEN_WIDTH-latura;
+                ptHeadPos.y=SCREEN_HEIGHT-(SCREEN_HEIGHT/6);
+                xDirection=0.0;
+            }
+        }
+        else if(xWorms==6)
+        {
+            latura=(SCREEN_HEIGHT/7);
+            if(xWormIndex==0)
+            {
+                ptHeadPos.x=2*latura;
+                ptHeadPos.y=SCREEN_HEIGHT-(SCREEN_HEIGHT-lungime);
+                xDirection=1.57;
+            }
+            else if(xWormIndex==1)
+            {
+                ptHeadPos.x=3*latura;
+                ptHeadPos.y=SCREEN_HEIGHT-(SCREEN_HEIGHT-lungime);
+                xDirection=1.57;
+            }
+            else if(xWormIndex==2)
+            {
+                ptHeadPos.x=4*latura;
+                ptHeadPos.y=(SCREEN_HEIGHT-lungime);
+                xDirection=4.71;
+            }
+            if(xWormIndex==3)
+            {
+                ptHeadPos.x=5*latura;
+                ptHeadPos.y=(SCREEN_HEIGHT-lungime);
+                xDirection=4.71;
+
+            }
+            if(xWormIndex==4)
+            {
+                ptHeadPos.x=6*latura;
+                ptHeadPos.y=SCREEN_HEIGHT-(SCREEN_HEIGHT-lungime);
+                xDirection=1.57;
+            }
+            if(xWormIndex==5)
+            {
+                ptHeadPos.x=7*latura;
+                ptHeadPos.y=SCREEN_HEIGHT-(SCREEN_HEIGHT-lungime);
+                xDirection=1.57;
+
+            }
+        }// xWorms reprezinta numarul de rame
+        // xBodyParts este numarul de parti (cercuri) din corpul ramei
+        // xWormStretch este distanta dintre doua parti ale ramei
+        // xWormIndex este indexul ramei
+        // ptHeadPos.x si ptHeadPos.y sunt coordonatele capului ramei
+        // xDirection este directia ramei, in radiani
+        // SCREEN_WIDTH si SCREEN_HEIGHT sunt dimensiunile ecranului
+
+        // sa se calculeze coordonatele si directia ramei la inceputul jocului
+
+    }
