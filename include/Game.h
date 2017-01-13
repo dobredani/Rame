@@ -26,6 +26,8 @@ class Game
         void MoveWorms();
         void PreCollision();
         void MoveCritters();
+        void FeedWorms();
+        void AttackWorms();
 
         double SteerWorm(Player* oPlayer);
         void RenderGameObjects();
@@ -53,6 +55,7 @@ class Game
 
         double AngleTowardsWorm(GameObject *pCritter);
         PullForce CrittersSpreadOut(GameObject *pCritter);
+        void RemoveFood(GameObjects *pGameObject);
 };
 
 #endif // GAME_H

@@ -20,11 +20,12 @@ class Worm
         void SetTexture(Texture *oValue) { oTexture = oValue; }
         void SetWormIndex(unsigned char xValue) { xWormIndex = xValue; oHeadSprite = {0 + TEXTURE_BORDER,0 + TEXTURE_BORDER + xValue * 62,63 - TEXTURE_BORDER * 2,63 - TEXTURE_BORDER * 2};}
         void SetPreCollisionBoxColor(SDL_Color oValue) { oPreCollisionBoxColor.r = oValue.r; oPreCollisionBoxColor.g = oValue.g; oPreCollisionBoxColor.b = oValue.b; oPreCollisionBoxColor.a = oValue.a;}
-        void SetInPreCollision(bool bValue) {bInPreCollision = bValue; if (!bInPreCollision) {lstCollidingWorms = NULL; lstCollidingObjects = NULL;} }
+        void SetInPreCollision(bool bValue) {bInPreCollision = bValue; if (!bInPreCollision) {lstCollidingWorms = NULL;} }
         bool GetInPreCollision() {return bInPreCollision;}
         PrecissionRect GetPreCollisionBox() { return oPreCollisionBox; }
         unsigned short GetWormBodyLength() { return xWormBodyLength; }
         PrecissionPoint GetGravityPoint() { return ptGravityPoint; }
+
 
         bool AddBodyParts(unsigned char xParts);
         void Render();
@@ -32,6 +33,16 @@ class Worm
         double BounceScreen();
         void InitialPosition(unsigned char xWorms, unsigned char xBodyParts);
         PrecissionPoint ClosestBodyPart(PrecissionPoint ptPoint);
+        void AddCollidingWorm(Worm *oOtherWorm);
+        void EatCollidingWorm();
+        void ShrinkWorm(unsigned char xParts);
+
+
+        bool DebugIsNaN();
+        bool DebugIsInf(double xNumber);
+
+        PrecissionPoint ptHeadPos;
+        PrecissionPoint ptMouth;
     protected:
 
     private:
@@ -48,21 +59,20 @@ class Worm
             CollidingWorms* pNext;
         };
 
-        struct CollidingObjects{
-            GameObject *oCollidingObject;
-            CollidingObjects* pNext;
-        };
+//        struct CollidingObjects{
+//            GameObject *oCollidingObject;
+//            CollidingObjects* pNext;
+//        };
 
         double xDirection;
         unsigned char xSpeed;
         WormBody *lstWormBody = NULL;
         CollidingWorms *lstCollidingWorms=NULL;
-        CollidingObjects *lstCollidingObjects=NULL;
+//        CollidingObjects *lstCollidingObjects=NULL;
 
         bool bInPreCollision = false;
         SDL_Color oPreCollisionBoxColor;
         PrecissionRect oPreCollisionBox;
-        PrecissionPoint ptHeadPos;
         PrecissionPoint ptGravityPoint;
         unsigned short xWormBodyLength = 0;
         Texture *oTexture;
@@ -72,6 +82,7 @@ class Worm
         unsigned char xBounceRadius = 80;
         double xBodyPartRadius = 32;
         double xZoomFactor = 0.8;
+        unsigned char xSpeedUp = 2;
         PrecissionPoint ptLeftBounceCircle;
         PrecissionPoint ptRightBounceCircle;
 
@@ -80,6 +91,8 @@ class Worm
         void CalculateDirectionPosition(WormBody *pBodyPart, PrecissionPoint ptHeadPos);
         void ResetPreCollisionBox() {oPreCollisionBox.x = 0; oPreCollisionBox.y = 0; oPreCollisionBox.w = 0; oPreCollisionBox.h = 0;}
         void CalculatePrecollisionBox(PrecissionPoint ptNewPoint);
+        void RemoveBodyParts(unsigned char xRemoveBodyParts);
+
 };
 
 #endif // WORM_H

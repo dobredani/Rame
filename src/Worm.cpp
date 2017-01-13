@@ -36,6 +36,7 @@ bool Worm::AddBodyParts(unsigned char xParts)
         lstWormBody->oSpriteRect.x = 62 + TEXTURE_BORDER + (int)(xWormBodyLength*1.2)%3 * 62; // Pick one of the 3 available body sprites considering the position in the worm body
         lstWormBody->oSpriteRect.h = 63 - TEXTURE_BORDER * 2;
         lstWormBody->oSpriteRect.w = 63 - TEXTURE_BORDER * 2;
+        xSpeed = min(255,xSpeed + xSpeedUp);
     }
     return true;
 }
@@ -52,7 +53,8 @@ void Worm::Render()
     RenderWormHead();
 
     if (DEBUG_SHOW) oTexture->DrawOutlineRect(PrecissionToSDLRect(oPreCollisionBox), oPreCollisionBoxColor);
-    if (DEBUG_SHOW) oTexture->DrawLine(PrecissionToSDLPoint(ptLeftBounceCircle), PrecissionToSDLPoint(ptRightBounceCircle), oPreCollisionBoxColor);
+    if (DEBUG_SHOW) oTexture->DrawOutlineRect((SDL_Rect){ptMouth.x-10,ptMouth.y-10,20,20}, (SDL_Color){0,0,145,245});
+    if (DEBUG_SHOW) oTexture->DrawLine(PrecissionToSDLPoint(ptLeftBounceCircle), PrecissionToSDLPoint(ptRightBounceCircle), (SDL_Color){0,45,185,145});
     if (DEBUG_SHOW) oTexture->DrawCircle(PrecissionToSDLPoint(ptLeftBounceCircle), xBounceRadius, oPreCollisionBoxColor);
     if (DEBUG_SHOW) oTexture->DrawCircle(PrecissionToSDLPoint(ptRightBounceCircle), xBounceRadius, oPreCollisionBoxColor);
 
@@ -72,15 +74,24 @@ void Worm::Move(double xSteer, long long xFrame)
     WormBody* pBodyPart = lstWormBody;
     while (pBodyPart != NULL)
     {
+
         if (pBodyPart->pNextWormBody != NULL)
         {
+            DebugIsInf(pBodyPart->ptRenderPosition.x);
+            DebugIsInf(ptHeadPos.x);
             CalculateDirectionPosition(pBodyPart);
+            DebugIsInf(pBodyPart->ptRenderPosition.x);
             CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
+            DebugIsInf(pBodyPart->ptRenderPosition.x);
         }
         else
         {
+            DebugIsInf(pBodyPart->ptRenderPosition.x);
+            DebugIsInf(ptHeadPos.x);
             CalculateDirectionPosition(pBodyPart, ptHeadPos);
+            DebugIsInf(pBodyPart->ptRenderPosition.x);
             CalculatePrecollisionBox(pBodyPart->ptRenderPosition);
+            DebugIsInf(pBodyPart->ptRenderPosition.x);
         }
 
         pBodyPart = pBodyPart->pNextWormBody;
@@ -88,6 +99,9 @@ void Worm::Move(double xSteer, long long xFrame)
 
     ptHeadPos.x = ptHeadPos.x + (xWormStretch)*cos(xDirection)/xSpeed;
     ptHeadPos.y = ptHeadPos.y + (xWormStretch)*sin(xDirection)/xSpeed;
+
+    ptMouth.x = ptHeadPos.x + xBodyPartRadius*xZoomFactor*sin(0.78);
+    ptMouth.y = ptHeadPos.y + xBodyPartRadius*xZoomFactor*cos(0.78);
 
     double xBounceAngle = BounceScreen();
     if (xBounceAngle<0)
@@ -462,4 +476,84 @@ PrecissionPoint Worm::ClosestBodyPart(PrecissionPoint ptPoint)
     }
 
     return ptResult;
+}
+
+void Worm::RemoveBodyParts(unsigned char xRemoveBodyParts)
+{
+    while (xWormBodyLength>1 && xRemoveBodyParts-- > 0 && lstWormBody != NULL && lstWormBody->pNextWormBody!=NULL)
+    {
+        WormBody *pDeleteBody = lstWormBody;
+        lstWormBody = lstWormBody->pNextWormBody;
+        delete pDeleteBody;
+        xSpeed = max(1,xSpeed - xSpeedUp);
+        xWormBodyLength--;
+    }
+
+    DebugIsNaN();
+}
+
+void Worm::EatCollidingWorm()
+{
+    CollidingWorms *pCollidingWorms = lstCollidingWorms;
+
+    while (pCollidingWorms != NULL)
+    {
+        PrecissionPoint ptMouth2;
+        ptMouth2.x = pCollidingWorms->CollidingWorm->ptMouth.x; // TODO calculate position of the mouth
+        ptMouth2.y = pCollidingWorms->CollidingWorm->ptMouth.y;
+
+        WormBody *pWormBody=lstWormBody;
+
+        unsigned char xRemoveParts = 0;
+        while (pWormBody != NULL)
+        {
+            xRemoveParts++;
+            if (DistanceBetweenPoints(ptMouth2,pWormBody->ptRenderPosition) <xBodyPartRadius)
+            {
+                RemoveBodyParts(xRemoveParts);
+                pCollidingWorms->CollidingWorm->AddBodyParts(xRemoveParts/3);
+                break;
+            }
+
+            pWormBody = pWormBody->pNextWormBody;
+        }
+
+        pCollidingWorms = pCollidingWorms->pNext;
+    }
+}
+
+void Worm::AddCollidingWorm(Worm *pOtherWorm)
+{
+    CollidingWorms *pCollidingWorm = lstCollidingWorms;
+
+    lstCollidingWorms = new CollidingWorms;
+    lstCollidingWorms->CollidingWorm = pOtherWorm;
+    lstCollidingWorms->pNext = pCollidingWorm;
+}
+
+void Worm::ShrinkWorm(unsigned char xParts)
+{
+    RemoveBodyParts(xParts);
+}
+
+bool Worm::DebugIsNaN()
+{
+    if (isnan(ptHeadPos.x))
+    {
+//        ptHeadPos.x = 0;
+//        ptHeadPos.y = 0;
+        xDirection= 0;
+    }
+
+}
+
+bool Worm::DebugIsInf(double xNumber)
+{
+    if (isinf(xNumber))
+    {
+//        ptHeadPos.x = 0;
+//        ptHeadPos.y = 0;
+        xDirection= 0;
+    }
+
 }

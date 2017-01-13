@@ -62,7 +62,7 @@ void GameObject::CombinePullForces(PullForce oNewPullForce)
 
     d1 = oPullForce.xMagnitude;
     d2 = oNewPullForce.xMagnitude;
-    oPullForce.xMagnitude = sqrt(pow(d1,2) + pow(d2,2) - 2* d1*d2*cos(oPullForce.xDirection - oNewPullForce.xDirection));
+    oPullForce.xMagnitude = sqrt(pow(d1,2) + pow(d2,2) - 2* d1*d2*cos(M_PI - oPullForce.xDirection + oNewPullForce.xDirection));
     oPullForce.xDirection = oPullForce.xDirection + (oPullForce.xDirection - oNewPullForce.xDirection )/2;
 
 }

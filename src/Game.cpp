@@ -26,7 +26,7 @@ void Game::SpawnWorms()
 void Game::SpawnGameObjects()
 {
 
-    if (xFoodObjects<3) SpawnNewFood(++xFoodObjects);
+    if (xFoodObjects<5) SpawnNewFood(++xFoodObjects);
     if (xCritterObjects<2) SpawnNewCritter(++xCritterObjects);
 
 }
@@ -35,9 +35,9 @@ Worm* Game::SpawnNewWorm(unsigned char xWorm)
 {
     Worm * oWorm = new Worm;
     oWorm->SetWormIndex(xWorm);
-    oWorm->SetDirection(5.2);
-    oWorm->SetHeadPos((PrecissionPoint){50 + xWorm*60,100});
-    oWorm->SetSpeed(50);
+//    oWorm->SetDirection(5.2);
+//    oWorm->SetHeadPos((PrecissionPoint){50 + xWorm*60,100});
+    oWorm->SetSpeed(250);
     oWorm->InitialPosition(xPlayers,12);
     oWorm->AddBodyParts(12);
 
@@ -52,9 +52,10 @@ GameObject* Game::SpawnNewFood(unsigned char xGobject)
 {
     GameObject * oGameObject = new GameObject;
     oGameObject->SetIndex(xGobject);
-    oGameObject->SetPosition((PrecissionPoint){50 + xGobject*60,100});
+    oGameObject->SetPosition((PrecissionPoint){50 + ((int)(xFramesCount*0.3 + xGobject))%5*130,30 + ((int)(xFramesCount*0.7 + xGobject))%4*105});
     oGameObject->SetDoesDamage(false);
     oGameObject->SetDoesFeed(true);
+    oGameObject->SetDirection(xFramesCount + xGobject);
 
     Texture *oTexture = new Texture(oRenderer);
     oTexture->LoadImage("Images/Object Sprites.png");
@@ -108,19 +109,22 @@ double Game::SteerWorm(Player* oPlayer)
     if (oPlayer == NULL) return 0;
 
     const unsigned char *arrKeybState = SDL_GetKeyboardState(NULL);
-    if (arrKeybState[oPlayer->xLeftKeyCode]) return -0.7;
-    if (arrKeybState[oPlayer->xRightKeyCode]) return 0.7;
+    if (arrKeybState[oPlayer->xLeftKeyCode])
+        return -0.7;
+    if (arrKeybState[oPlayer->xRightKeyCode])
+        return 0.7;
     return 0;
-
-    if (arrKeybState[SDL_SCANCODE_RIGHT] && arrKeybState[SDL_SCANCODE_UP]) {
-    }
-
 }
 
 void Game::MoveWorms()
 {
     for (unsigned char xi = 0; xi<xPlayers; xi++)
-        arrWorms[xi]->Move(SteerWorm(oGameMenu->GetPlayer(xi)),++xFramesCount);
+        {
+            arrWorms[xi]->Move(SteerWorm(oGameMenu->GetPlayer(xi)),++xFramesCount);
+            arrWorms[xi]->DebugIsInf(arrWorms[xi]->ptHeadPos.x);
+            arrWorms[xi]->DebugIsNaN();
+        }
+
 }
 
 void Game::RenderWorms()
@@ -156,6 +160,55 @@ bool Game::CheckPrecollision(Worm *oWorm1, Worm *oWorm2)
     return true;
 }
 
+void Game::FeedWorms()
+{
+    for (unsigned char xi = 0; xi<xPlayers; xi++)
+    {
+        if (arrWorms[xi] != NULL && arrWorms[xi]->GetInPreCollision())
+        {
+            arrWorms[xi]->EatCollidingWorm();
+        }
+
+        if (arrWorms[xi] != NULL)
+        {
+            GameObjects *pGameObject = lstFoodObjects;
+
+            while (pGameObject != NULL)
+            {
+                if (DistanceBetweenPoints(arrWorms[xi]->ptMouth,(PrecissionPoint) {pGameObject->oGameObject->ptPosition.x +32, pGameObject->oGameObject->ptPosition.y +32 })< 32)
+                {
+                    arrWorms[xi]->AddBodyParts(2);
+                    RemoveFood(pGameObject);
+                }
+
+                pGameObject = pGameObject->pNext;
+            }
+        }
+    }
+}
+
+void Game::AttackWorms()
+{
+    for (unsigned char xi = 0; xi<xPlayers; xi++)
+    {
+        if (arrWorms[xi] != NULL)
+        {
+            GameObjects *pGameObject = lstCritterObjects;
+
+            while (pGameObject != NULL)
+            {
+                if (DistanceBetweenPoints(arrWorms[xi]->ptMouth,(PrecissionPoint) {pGameObject->oGameObject->ptPosition.x +32, pGameObject->oGameObject->ptPosition.y +32 })< 32)
+                {
+                    arrWorms[xi]->ShrinkWorm(1);
+                }
+
+                pGameObject = pGameObject->pNext;
+            }
+        }
+    }
+}
+
+
 void Game::PreCollision()
 {
     for (unsigned char xi = 0; xi<xPlayers; xi++)
@@ -172,6 +225,8 @@ void Game::PreCollision()
                 arrWorms[yi]->SetPreCollisionBoxColor((SDL_Color){0xFF,0x00,0x00,0xFF});
                 arrWorms[xi]->SetInPreCollision(true);
                 arrWorms[yi]->SetInPreCollision(true);
+                arrWorms[xi]->AddCollidingWorm(arrWorms[yi]);
+                arrWorms[yi]->AddCollidingWorm(arrWorms[xi]);
             }
     }
 }
@@ -264,4 +319,25 @@ double Game::AngleTowardsWorm(GameObject *pCritter)
                 }
         }
     return xAngle;
+}
+
+void Game::RemoveFood(GameObjects *pGameObject)
+{
+    if (lstFoodObjects == pGameObject)
+    {
+        lstFoodObjects = pGameObject->pNext;
+        delete pGameObject;
+    }
+    else
+    {
+        GameObjects *pPrevObject = lstFoodObjects;
+
+        while (pPrevObject->pNext != pGameObject)
+            pPrevObject = pPrevObject->pNext;
+
+        pPrevObject->pNext = pGameObject->pNext;
+        delete pGameObject->oGameObject;
+        delete pGameObject;
+    }
+    xFoodObjects--;
 }

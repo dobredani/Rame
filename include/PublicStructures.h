@@ -8,7 +8,7 @@
 #define GAME_DIFFICULTY_EASY 1;
 #define GAME_DIFFICULTY_MEDIUM 2;
 #define GAME_DIFFICULTY_HARD 3;
-const bool DEBUG_SHOW = true;
+const bool DEBUG_SHOW = false;
 
 using namespace std;
 
