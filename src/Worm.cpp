@@ -97,19 +97,19 @@ void Worm::Move(double xSteer, long long xFrame)
         pBodyPart = pBodyPart->pNextWormBody;
     }
 
-    ptHeadPos.x = ptHeadPos.x + (xWormStretch)*cos(xDirection)/xSpeed;
-    ptHeadPos.y = ptHeadPos.y + (xWormStretch)*sin(xDirection)/xSpeed;
+    ptHeadPos.x = ptHeadPos.x + (xWormStretch)*cos(xDirection)/((double)xSpeed/3.4);
+    ptHeadPos.y = ptHeadPos.y + (xWormStretch)*sin(xDirection)/((double)xSpeed/3.4);
 
     ptMouth.x = ptHeadPos.x + xBodyPartRadius*xZoomFactor*sin(0.78);
     ptMouth.y = ptHeadPos.y + xBodyPartRadius*xZoomFactor*cos(0.78);
 
     double xBounceAngle = BounceScreen();
     if (xBounceAngle<0)
-        xDirection += (min(xSteer/2,0.0)+xBounceAngle)/xSpeed;
+        xDirection += (min(xSteer/2,0.0)+xBounceAngle-0.1);
     else if (xBounceAngle>0)
-        xDirection += (max(xSteer/2,0.0)+xBounceAngle)/xSpeed;
+        xDirection += (max(xSteer/2,0.0)+xBounceAngle+0.1);
     else
-        xDirection += (xSteer+0.0)/xSpeed;
+        xDirection += (xSteer+0.0)/((double)xSpeed/1.4);
 
     CalculatePrecollisionBox(ptHeadPos);
 }
@@ -119,8 +119,8 @@ void Worm::CalculateDirectionPosition(WormBody *pBodyPart)
     pBodyPart->xDirection = GetSegmentAngle(pBodyPart->pNextWormBody->ptRenderPosition.x, pBodyPart->pNextWormBody->ptRenderPosition.y, pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y);
     pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 ;
 
-    pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (pBodyPart->pNextWormBody->ptRenderPosition.x - pBodyPart->ptRenderPosition.x)/xSpeed;
-    pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (pBodyPart->pNextWormBody->ptRenderPosition.y - pBodyPart->ptRenderPosition.y)/xSpeed;
+    pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (pBodyPart->pNextWormBody->ptRenderPosition.x - pBodyPart->ptRenderPosition.x)/((double)xSpeed/3.4);
+    pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (pBodyPart->pNextWormBody->ptRenderPosition.y - pBodyPart->ptRenderPosition.y)/((double)xSpeed/3.4);
 }
 
 void Worm::CalculateDirectionPosition(WormBody *pBodyPart, PrecissionPoint ptHeadPos)
@@ -128,8 +128,8 @@ void Worm::CalculateDirectionPosition(WormBody *pBodyPart, PrecissionPoint ptHea
     pBodyPart->xDirection = GetSegmentAngle(ptHeadPos.x, ptHeadPos.y, pBodyPart->ptRenderPosition.x, pBodyPart->ptRenderPosition.y);
     pBodyPart->xDirection = (2*M_PI - pBodyPart->xDirection)/(2*M_PI)*360 ;
 
-    pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (ptHeadPos.x - pBodyPart->ptRenderPosition.x)/xSpeed;
-    pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (ptHeadPos.y - pBodyPart->ptRenderPosition.y)/xSpeed;
+    pBodyPart->ptRenderPosition.x = pBodyPart->ptRenderPosition.x + (ptHeadPos.x - pBodyPart->ptRenderPosition.x)/((double)xSpeed/3.4);
+    pBodyPart->ptRenderPosition.y = pBodyPart->ptRenderPosition.y + (ptHeadPos.y - pBodyPart->ptRenderPosition.y)/((double)xSpeed/3.4);
 }
 
 void Worm::CalculatePrecollisionBox(PrecissionPoint ptPoint)
