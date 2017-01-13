@@ -16,7 +16,7 @@ int main( int argc, char* args[] )
     oGameMenu->SetRenderer(oRenderer);
 
 
-    Game *oGame = new Game(6);
+    Game *oGame = new Game(oGameMenu->GetPlayersCount());
 
 
     bool bQuit = false;
@@ -34,7 +34,7 @@ int main( int argc, char* args[] )
         if (oGameMenu->ClickedNewGame())
         {
             oGame = NULL;
-            oGame = new Game(2);
+            oGame = new Game(oGameMenu->GetPlayersCount());
             oGame->SetRenderer(oRenderer);
             oGame->SpawnWorms();
             oGame->SetGameMenu(oGameMenu);
@@ -49,9 +49,9 @@ int main( int argc, char* args[] )
 
         if (oGame->GetGameOver())
         {
-            if (oGameMenu->ClickedOptions())
+            /*if (oGameMenu->ClickedOptions())
                 oGameMenu->ShowOptionsMenu();
-            else
+            else*/
                 oGameMenu->ShowMainMenu();
         }
         else

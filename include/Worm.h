@@ -82,7 +82,7 @@ class Worm
         unsigned char xBounceRadius = 80;
         double xBodyPartRadius = 32;
         double xZoomFactor = 0.8;
-        unsigned char xSpeedUp = 2;
+        unsigned char xSpeedUp = 3;
         PrecissionPoint ptLeftBounceCircle;
         PrecissionPoint ptRightBounceCircle;
 

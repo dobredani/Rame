@@ -26,7 +26,7 @@ void Game::SpawnWorms()
 void Game::SpawnGameObjects()
 {
 
-    if (xFoodObjects<5) SpawnNewFood(++xFoodObjects);
+    if (xFoodObjects<9) SpawnNewFood(++xFoodObjects);
     if (xCritterObjects<2) SpawnNewCritter(++xCritterObjects);
 
 }
@@ -52,7 +52,7 @@ GameObject* Game::SpawnNewFood(unsigned char xGobject)
 {
     GameObject * oGameObject = new GameObject;
     oGameObject->SetIndex(xGobject);
-    oGameObject->SetPosition((PrecissionPoint){50 + ((int)(xFramesCount*0.3 + xGobject))%5*130,30 + ((int)(xFramesCount*0.7 + xGobject))%4*105});
+    oGameObject->SetPosition((PrecissionPoint){50 + ((int)(xFramesCount*0.3 + xGobject*1.2))%5*((SCREEN_WIDTH)/5),30 + ((int)(xFramesCount*0.7 + xGobject*1.5))%4*((SCREEN_HEIGHT)/4)});
     oGameObject->SetDoesDamage(false);
     oGameObject->SetDoesFeed(true);
     oGameObject->SetDirection(xFramesCount + xGobject);
