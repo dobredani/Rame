@@ -44,7 +44,7 @@ int main( int argc, char* args[] )
         if (oGameMenu->ClickedExit()) bQuit = true;
 
         //Clear screen
-        SDL_SetRenderDrawColor( oRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_SetRenderDrawColor( oRenderer, 0xAF, 0xFF, 0xAF, 0xFF );
         SDL_RenderClear( oRenderer );
 
         if (oGame->GetGameOver())

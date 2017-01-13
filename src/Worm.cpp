@@ -105,9 +105,9 @@ void Worm::Move(double xSteer, long long xFrame)
 
     double xBounceAngle = BounceScreen();
     if (xBounceAngle<0)
-        xDirection += (min(xSteer/2,0.0)+xBounceAngle-0.1);
+        xDirection += (min(xSteer/2,0.0)+xBounceAngle-0.2);
     else if (xBounceAngle>0)
-        xDirection += (max(xSteer/2,0.0)+xBounceAngle+0.1);
+        xDirection += (max(xSteer/2,0.0)+xBounceAngle+0.2);
     else
         xDirection += (xSteer+0.0)/((double)xSpeed/1.4);
 
