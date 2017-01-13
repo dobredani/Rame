@@ -44,15 +44,19 @@
 			<Add directory="C:/Users/Dani/Dropbox/Facultate/Teme/Proiect IP/i686-w64-mingw32/lib" />
 		</Linker>
 		<Unit filename="Test.cpp" />
+		<Unit filename="include/Comenzi.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/GameMenu.h" />
 		<Unit filename="include/PublicStructures.h" />
 		<Unit filename="include/SDLWindow.h" />
+		<Unit filename="include/SubMenu.h" />
 		<Unit filename="include/Texture.h" />
 		<Unit filename="include/Worm.h" />
+		<Unit filename="src/Comenzi.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/GameMenu.cpp" />
 		<Unit filename="src/SDLWindow.cpp" />
+		<Unit filename="src/SubMenu.cpp" />
 		<Unit filename="src/Texture.cpp" />
 		<Unit filename="src/Worm.cpp" />
 		<Extensions>

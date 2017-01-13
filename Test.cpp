@@ -51,9 +51,9 @@ int main( int argc, char* args[] )
 
         if (oGame->GetGameOver())
         {
-            if (oGameMenu->ClickedOptions())
+            /*if (oGameMenu->ClickedOptions())
                 oGameMenu->ShowOptionsMenu();
-            else
+            else*/
                 oGameMenu->ShowMainMenu();
         }
         else
