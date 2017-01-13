@@ -12,14 +12,12 @@ int main( int argc, char* args[] )
     }
 
     SDL_Renderer* oRenderer = oSDLWindow.GetRenderer();
-//    Texture *gSpriteSheetTexture;
     GameMenu *oGameMenu = new GameMenu;
     oGameMenu->SetRenderer(oRenderer);
 
 
     Game *oGame = new Game(6);
 
-//    gSpriteSheetTexture = new Texture(oRenderer);
 
     bool bQuit = false;
     SDL_Event eSDLevent;
@@ -58,18 +56,21 @@ int main( int argc, char* args[] )
         }
         else
         {
+            oGame->SpawnGameObjects();
+            oGame->MoveCritters();
             oGame->MoveWorms();
+            oGame->ApplyForces();
             oGame->PreCollision();
+            oGame->FeedWorms();
+            oGame->AttackWorms();
             oGame->RenderWorms();
+            oGame->RenderGameObjects();
         }
 
 
-        //Update screen
         SDL_RenderPresent( oRenderer );
     }
 
-	//Free resources and close SDL
-//	gSpriteSheetTexture->FreeMemory();
 	oSDLWindow.closeSDL();
 
 	return 0;
